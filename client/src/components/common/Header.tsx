@@ -1,6 +1,7 @@
 import React from "react";
 import BroadcastController from "components/StreamDashboard/BroadcastController";
 import { TbBuildingBroadcastTower } from "react-icons/tb";
+import UserMenu from "components/User/UserMenu";
 
 type Props = {};
 
@@ -14,9 +15,8 @@ const Header = (props: Props) => {
         <TbBuildingBroadcastTower />
         Stream As It
       </a>
-      <div>
-        <BroadcastController />
-      </div>
+      <UserMenu />
+      <BroadcastController />
     </div>
   );
 };
