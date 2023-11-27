@@ -1,8 +1,8 @@
-# One-Click Streamer
+# Stream As It
 
 ## Overview
 
-One-Click Streamer is a web application that allows users to effortlessly stream content to various social media platforms directly from their browser without any additional installations. This project serves as a one-click streaming solution, simplifying the process for content creators to reach their audience seamlessly.
+Stream As It is a web application that allows users to effortlessly stream content to various social media platforms directly from their browser without any additional installations. This project serves as a one-click streaming solution, simplifying the process for content creators to reach their audience seamlessly.
 
 ### Features
 
@@ -22,10 +22,12 @@ One-Click Streamer is a web application that allows users to effortlessly stream
 
 - **Database:** PostgreSQL is used as the database to store relevant information.
 
-<img src="https://cdn1.iconfinder.com/data/icons/programing-development-8/24/react_logo-512.png" height="100"/>
-<img src="https://seeklogo.com/images/T/tailwind-css-logo-5AD4175897-seeklogo.com.png" height="100"/>
-<img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/nest-js-icon.png" width="100"/>
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Postgresql_elephant.svg/993px-Postgresql_elephant.svg.png" height="100" />
+<div style="display:flex;">
+  <img src="https://cdn1.iconfinder.com/data/icons/programing-development-8/24/react_logo-512.png" height="100"/>
+  <img src="https://seeklogo.com/images/T/tailwind-css-logo-5AD4175897-seeklogo.com.png" height="100"/>
+  <img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/nest-js-icon.png" width="100"/>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Postgresql_elephant.svg/993px-Postgresql_elephant.svg.png" height="100" />
+</div>
 
 ## Getting Started
 
@@ -33,9 +35,9 @@ One-Click Streamer is a web application that allows users to effortlessly stream
 
 ```bash
 
-git clone https://github.com/your-username/one-click-streamer.git
+git clone https://github.com/allenabraham777/stream-as-it.git
 
-cd one-click-streamer
+cd stream-as-it
 
 ```
 
@@ -45,13 +47,13 @@ cd one-click-streamer
 
 # Install frontend dependencies
 
-cd frontend
+cd client
 
 npm install
 
 # Install backend dependencies
 
-cd ../backend
+cd ../server
 
 npm install
 
@@ -69,13 +71,13 @@ npm install
 
 # Run the frontend
 
-cd frontend
+cd client
 
-npm start
+npm run dev
 
 # Run the backend
 
-cd ../backend
+cd ../server
 
 npm start
 
@@ -83,7 +85,7 @@ npm start
 
 5.  **Open in Browser:**
 
-Open your browser and navigate to `http://localhost:3000` to access the One-Click Streamer.
+Open your browser and navigate to `http://localhost:5173` to access the Stream As It.
 
 ## Project Status
 
@@ -91,7 +93,7 @@ This project is a side project created for learning advanced app development. It
 
 ### Disclaimer
 
-One-Click Streamer is a side project and a learning exercise. It is not intended for production use, and its features may not be as robust as commercial streaming solutions.
+Stream As It is a side project and a learning exercise. It is not intended for production use, and its features may not be as robust as commercial streaming solutions.
 
 ## Acknowledgments
 
