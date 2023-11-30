@@ -1,5 +1,5 @@
 {
-  "name": "stream-as-it",
+  "name": "@stream-as-it/client-base",
   "private": true,
   "version": "0.0.0",
   "type": "module",
