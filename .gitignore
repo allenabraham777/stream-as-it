@@ -13,6 +13,7 @@ pnpm-lock.yaml
 
 node_modules
 dist
+build
 dist-ssr
 *.local
 
@@ -29,6 +30,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-.env*
+.env
+.env.development
+.env.production
 
 .nx/*
