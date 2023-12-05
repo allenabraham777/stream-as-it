@@ -1,0 +1,12 @@
+{
+  "name": "@stream-as-it/tsconfig",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "files": [
+    "nestjs.json"
+  ],
+  "devDependencies": {
+    "tsconfig-paths": "^4.2.0"
+  }
+}

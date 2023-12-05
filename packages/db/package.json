@@ -11,9 +11,8 @@
     "clean": "rimraf build && rimraf coverage",
     "test": "npm run test:ci",
     "test:ci": "jest --ci --collectCoverage --maxWorkers 2 --passWithNoTests",
-    "root:env": "dotenv -e ../../.env --",
-    "db:dev:generate": "pnpm root:env prisma generate",
-    "db:dev:migrate": "pnpm root:env prisma migrate dev --name init"
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev --name init"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

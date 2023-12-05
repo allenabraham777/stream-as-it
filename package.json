@@ -12,6 +12,7 @@
     "build:db": "turbo build --filter=@stream-as-it/db",
     "dev": "turbo run dev",
     "lint": "node node_modules/turbo/bin/turbo lint",
+    "prettier": "node node_modules/turbo/bin/turbo prettier",
     "prepare": "husky install"
   },
   "keywords": [],
