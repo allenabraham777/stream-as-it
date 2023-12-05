@@ -8,7 +8,7 @@ export class AuthService {
   constructor(private prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDTO) {
-    const { account_name, username, email, password } = createUserDto;
+    const { account_name, name, email, password } = createUserDto;
     const isExistingAccount = await this.prisma.account.findFirst({
       where: { account_name },
     });
@@ -27,7 +27,7 @@ export class AuthService {
     const hashedPassword = await hash(password, 10);
     return await this.prisma.user.create({
       data: {
-        username,
+        name,
         email,
         password: hashedPassword,
         account_id: account.id,

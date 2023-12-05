@@ -27,7 +27,7 @@ model Account {
 model User {
   id                 Int      @id @default(autoincrement())
   account_id         Int
-  username           String
+  name               String
   email              String
   password           String
   email_verified     Boolean  @default(false)
