@@ -10,8 +10,77 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Account Table
+model Account {
+  id           Int      @id @default(autoincrement())
+  account_name String   @unique
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  streams         Stream[]
+  users           User[]
+  StreamKey       StreamKey[]
+  forgot_password ForgotPassword[]
+}
+
+// User Table
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id                 Int      @id @default(autoincrement())
+  account_id         Int
+  username           String
+  email              String
+  password           String
+  email_verified     Boolean  @default(false)
+  verification_token String?
+  reset_token        String?
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  streams         Stream[]
+  forgot_password ForgotPassword?
+
+  account Account @relation(fields: [account_id], references: [id])
+}
+
+// Stream Table
+model Stream {
+  id                 Int      @id @default(autoincrement())
+  user_id            Int
+  account_id         Int
+  stream_title       String
+  stream_description String
+  is_live            Boolean
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  stream_keys StreamKey[]
+
+  user    User    @relation(fields: [user_id], references: [id])
+  account Account @relation(fields: [account_id], references: [id])
+}
+
+// StreamKey Table
+model StreamKey {
+  id         Int      @id @default(autoincrement())
+  stream_id  Int
+  platform   String
+  stream_key String   @unique
+  account_id Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  stream  Stream  @relation(fields: [stream_id], references: [id])
+  account Account @relation(fields: [account_id], references: [id])
+}
+
+// ForgotPassword Table
+model ForgotPassword {
+  id         Int      @id @default(autoincrement())
+  user_id    Int      @unique
+  account_id Int
+  token      String
+  expires_at DateTime
+
+  user    User    @relation(fields: [user_id], references: [id])
+  account Account @relation(fields: [account_id], references: [id])
 }
