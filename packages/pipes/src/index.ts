@@ -1,1 +1,1 @@
-export {ZodValidationPipe} from "zod-validation/zod-validation.pipe"
+export {ZodValidationPipe} from "./zod-validation/zod-validation.pipe"
