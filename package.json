@@ -8,6 +8,7 @@
     "packages/*"
   ],
   "scripts": {
+    "build": "turbo build",
     "build:server": "turbo build --filter=@stream-as-it/server-base",
     "build:db": "turbo build --filter=@stream-as-it/db",
     "dev": "turbo run dev",

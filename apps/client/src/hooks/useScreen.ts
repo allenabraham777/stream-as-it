@@ -3,7 +3,7 @@ import { useState } from "react";
 const useScreen = () => {
   const [screenShareStream, setScreenShareStream] = useState<MediaStream | null>(null);
   const startScreenShare = async () => {
-    const options: DisplayMediaStreamOptions = {
+    const options = {
       video: {
         displaySurface: "window",
       },
