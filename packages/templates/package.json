@@ -1,0 +1,13 @@
+{
+  "name": "@stream-as-it/html-templates",
+  "version": "0.0.1",
+  "main": "build/index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "tsc && cp -r ./src/templates ./build/"
+  },
+  "devDependencies": {
+    "typescript": "4.9.3"
+  }
+}
