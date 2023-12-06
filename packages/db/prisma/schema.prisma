@@ -40,6 +40,8 @@ model User {
   forgot_password ForgotPassword?
 
   account Account @relation(fields: [account_id], references: [id])
+
+  @@unique([email, account_id])
 }
 
 // Stream Table

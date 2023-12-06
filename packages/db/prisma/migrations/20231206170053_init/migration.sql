@@ -63,6 +63,9 @@ CREATE TABLE "ForgotPassword" (
 CREATE UNIQUE INDEX "Account_account_name_key" ON "Account"("account_name");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "User_email_account_id_key" ON "User"("email", "account_id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "StreamKey_stream_key_key" ON "StreamKey"("stream_key");
 
 -- CreateIndex

@@ -15,3 +15,13 @@ export class UserSerializer {
     Object.assign(this, partial);
   }
 }
+
+@Exclude()
+export class LoginResponseSerializer {
+  @Expose()
+  readonly token: string;
+
+  constructor(partial: Partial<LoginResponseSerializer>) {
+    Object.assign(this, partial);
+  }
+}
