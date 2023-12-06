@@ -12,7 +12,8 @@
     "test": "npm run test:ci",
     "test:ci": "jest --ci --collectCoverage --maxWorkers 2 --passWithNoTests",
     "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev --name init"
+    "db:migrate": "prisma migrate dev --name init",
+    "db:ui": "prisma studio"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
