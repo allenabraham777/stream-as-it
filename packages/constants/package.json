@@ -1,0 +1,14 @@
+{
+  "name": "@stream-as-it/constants",
+  "version": "0.0.1",
+  "description": "The application constants for stream as it.",
+  "main": "build/index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "4.9.3"
+  }
+}
