@@ -25,3 +25,13 @@ export class LoginResponseSerializer {
     Object.assign(this, partial);
   }
 }
+
+@Exclude()
+export class UserVerificationResponseSerializer {
+  @Expose()
+  readonly status: boolean;
+
+  constructor(partial: Partial<UserVerificationResponseSerializer>) {
+    Object.assign(this, partial);
+  }
+}

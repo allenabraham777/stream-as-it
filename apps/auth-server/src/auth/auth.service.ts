@@ -1,18 +1,21 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { hash, compareSync } from 'bcrypt';
 import * as crypto from 'crypto';
-import { sign } from 'jsonwebtoken';
+
 import { PrismaService } from '@stream-as-it/db';
 import { MailService } from '@stream-as-it/email';
 import { getTemplate } from '@stream-as-it/html-templates';
-import { LoginUserDTO, RegisterUserDTO, UpdateUserDTO } from './auth.dto';
+
+import { LoginUserDTO, RegisterUserDTO } from './auth.dto';
 import { LoginResponseSerializer, UserSerializer } from './auth.serializer';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
     private mail: MailService,
+    private jwtService: JwtService,
   ) {}
 
   async register(
@@ -24,7 +27,6 @@ export class AuthService {
       const isExistingAccount = await t.account.findFirst({
         where: { account_name },
       });
-      console.log({ isExistingAccount });
 
       if (isExistingAccount) {
         throw new HttpException(
@@ -54,11 +56,15 @@ export class AuthService {
       });
       return user;
     });
+    const userToken = this.jwtService.sign(
+      { id: user.id, account_id: user.account_id },
+      { secret: process.env.VERIFY_SECRET },
+    );
     const html = getTemplate('verification', {
       name: user.name,
       company: `${process.env.COMPANY}`,
       from: `${process.env.AUTHOR}`,
-      link: `${process.env.CLIENT_URL}/verification/${user.verification_token}`,
+      link: `${process.env.CLIENT_URL}/verification/${userToken}/${user.verification_token}`,
     });
     await this.mail.sendMail({
       to: user.email,
@@ -72,10 +78,6 @@ export class AuthService {
     }
 
     return user;
-  }
-
-  async findAll() {
-    return await this.prisma.user.findMany();
   }
 
   async login(loginUserDto: LoginUserDTO, serializeData: boolean = false) {
@@ -96,13 +98,14 @@ export class AuthService {
       );
     }
 
-    const token = sign(
-      { id: user.id, account_id: user.account_id },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: '1d',
-      },
-    );
+    if (!user.email_verified) {
+      throw new HttpException('Please verify your email', HttpStatus.FORBIDDEN);
+    }
+
+    const token = this.jwtService.sign({
+      id: user.id,
+      account_id: user.account_id,
+    });
     if (serializeData) {
       return new LoginResponseSerializer({ token });
     }
@@ -110,14 +113,48 @@ export class AuthService {
     return { token };
   }
 
-  async update(id: number, updateUserDto: UpdateUserDTO) {
-    return await this.prisma.user.update({
-      data: updateUserDto,
-      where: { id },
+  async verifyUser(userToken: string, verificationToken: string) {
+    const decoded = this.jwtService.verify(userToken, {
+      secret: process.env.VERIFY_SECRET,
     });
+
+    await this.prisma.$transaction(async (t) => {
+      const user = await t.user.findFirst({
+        where: {
+          id: decoded.id,
+          account_id: decoded.account_id,
+          verification_token: verificationToken,
+          email_verified: false,
+        },
+      });
+      await await t.user.update({
+        where: {
+          id: decoded.id,
+          account_id: decoded.account_id,
+          verification_token: verificationToken,
+          email_verified: false,
+        },
+        data: {
+          email_verified: true,
+          verification_token: null,
+        },
+      });
+      if (!user)
+        throw new HttpException('Invalid operation', HttpStatus.BAD_REQUEST);
+    });
+    return { status: true };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async getUserDetails(
+    { id, account_id }: { id: number; account_id: number },
+    serializeData: boolean = false,
+  ) {
+    const user = await this.prisma.user.findFirst({
+      where: { id, account_id },
+    });
+    if (serializeData) {
+      return new UserSerializer(user);
+    }
+    return user;
   }
 }

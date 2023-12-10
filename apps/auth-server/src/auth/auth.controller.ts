@@ -1,11 +1,24 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { ZodValidationPipe } from '@stream-as-it/pipes';
 import { BaseController } from '@stream-as-it/server-class';
 import { CreateUserSchema, LoginUserSchema } from './auth.schema';
 import { AuthService } from './auth.service';
 import { RegisterUserDTO, LoginUserDTO } from './auth.dto';
-import { LoginResponseSerializer, UserSerializer } from './auth.serializer';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  LoginResponseSerializer,
+  UserSerializer,
+  UserVerificationResponseSerializer,
+} from './auth.serializer';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -29,5 +42,24 @@ export class AuthController extends BaseController {
   ) {
     const token = await this.authService.login(loginUserDTO);
     return this.serializeData(token, LoginResponseSerializer);
+  }
+
+  @Get('verify/:user_token/:verification_token')
+  async verifyUser(
+    @Param() params: { user_token: string; verification_token: string },
+  ) {
+    const status = await this.authService.verifyUser(
+      params.user_token,
+      params.user_token,
+    );
+    return this.serializeData(status, UserVerificationResponseSerializer);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Get('user/details')
+  async getUserDetails(@Request() req) {
+    const user = await this.authService.getUserDetails(req.user);
+    return this.serializeData(user, UserSerializer);
   }
 }
