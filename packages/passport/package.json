@@ -1,0 +1,24 @@
+{
+  "name": "@stream-as-it/passport",
+  "version": "0.0.1",
+  "description": "Passport js service for stream as it",
+  "main": "build/index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf build && rimraf coverage"
+  },
+  "devDependencies": {
+    "@types/passport-jwt": "^3.0.13",
+    "typescript": "4.9.3"
+  },
+  "dependencies": {
+    "@nestjs/common": "10.0.0",
+    "@nestjs/jwt": "^10.2.0",
+    "@nestjs/passport": "^10.0.3",
+    "@stream-as-it/db": "*",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1"
+  }
+}
