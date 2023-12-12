@@ -1,7 +1,7 @@
 {
   "name": "@stream-as-it/ui",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "./build/index.js",
   "sideEffects": false,
   "files": [
@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && npm run build:styles",
+    "build": "rimraf build && tsc && vite build && npm run build:styles",
     "build:styles": "postcss ./src/index.css -o ./build/style.css",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
@@ -37,6 +37,7 @@
     "yarn": "^1.22.21"
   },
   "dependencies": {
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
