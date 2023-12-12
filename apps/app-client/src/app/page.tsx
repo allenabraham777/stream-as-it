@@ -16,10 +16,15 @@ const Home = (props: Props) => {
         <ThemeToggle setTheme={setTheme} />
       </div>
       <div className="flex-1 flex flex-col items-center justify-center gap-8">
-        <Typography variant="h1" className="text-9xl scale-150">
+        <Typography
+          variant="h1"
+          className="text-9xl scale-150 bg-gradient-to-r from-[#e23369] via-[#590958] to-[#270742] dark:from-[#7cfeff] dark:via-[#febe8e] dark:to-[#39cbf7] text-transparent dark:text-transparent bg-clip-text"
+        >
           Stream As It
         </Typography>
-        <Typography variant="h3">Stream from your browser to web...</Typography>
+        <Typography variant="h3" className="text-[#390849] dark:text-[#a665fe]">
+          Stream from your browser to web...
+        </Typography>
         <Button>Get Started</Button>
       </div>
       <div className="flex-1 flex items-center justify-center">
