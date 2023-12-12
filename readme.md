@@ -103,7 +103,7 @@ This project draws inspiration from StreamYard, a leading streaming platform. It
 
 - [x] Create UI with all basic functionality
 - [x] Setup NestJs backend
-- [ ] Achieve basic streaming with hard coded url
+- [x] Achieve basic streaming with hard coded url
 - [ ] Migrate to NextJS
 - [ ] Add Shadcn ui (subjected to change)
 - [ ] Implement authentication backend
