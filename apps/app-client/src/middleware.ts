@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const protectedRoutes = ["/protected"].map((route) => new RegExp(route, "g"));
+const protectedRoutes = ["/stream/*"].map((route) => new RegExp(route, "g"));
 const authRoutes = ["/login", "/signup"].map((route) => new RegExp(route, "g"));
 
 export function middleware(request: NextRequest) {
@@ -23,6 +23,6 @@ export function middleware(request: NextRequest) {
   );
 
   if (isAuthRoute && token) {
-    return NextResponse.redirect(new URL("/protected", request.url));
+    return NextResponse.redirect(new URL("/stream/dashboard", request.url));
   }
 }

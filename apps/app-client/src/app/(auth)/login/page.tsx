@@ -15,25 +15,28 @@ import {
 } from "@stream-as-it/ui";
 import { useLogin } from "@/hooks/auth/useLogin";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { Dispatch } from "@/store/store";
+import { getUserDetails } from "@/store/thunks/authThunk";
 
 const REGEX = /^[a-z0-9]*$/g;
 
 type Props = {};
 
 const Login = (props: Props) => {
+  const dispatch = useDispatch<Dispatch>();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { login } = useLogin();
   const router = useRouter();
 
   const submit = () => {
-    console.log("Submit");
-
     if (!email || !password) {
       alert("Please enter information");
     } else {
       login(email, password)
-        .then((res) => router.push("/protected"))
+        .then((res) => router.push("/stream/dashboard"))
+        .then(() => dispatch(getUserDetails()))
         .catch((e) => alert(e));
     }
   };

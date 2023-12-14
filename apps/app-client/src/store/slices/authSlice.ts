@@ -15,7 +15,11 @@ const initialState: AuthState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    clearUserDetails(state: AuthState) {
+      state.user = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getUserDetails.pending, (state: AuthState) => {
@@ -34,5 +38,7 @@ const authSlice = createSlice({
       });
   },
 });
+
+export const { clearUserDetails } = authSlice.actions;
 
 export default authSlice.reducer;

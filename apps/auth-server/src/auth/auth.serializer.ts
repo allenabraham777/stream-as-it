@@ -6,6 +6,9 @@ export class UserSerializer {
   readonly id: number;
 
   @Expose()
+  readonly account_id: number;
+
+  @Expose()
   readonly name: string;
 
   @Expose()
