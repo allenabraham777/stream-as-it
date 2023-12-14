@@ -5,6 +5,8 @@ import "./globals.css";
 import { cn } from "@stream-as-it/ui";
 import "@stream-as-it/ui/build/style.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import AppProvider from "@/store/AppProvider";
+import StoreInitializer from "@/components/StoreInitializer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,18 +21,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head />
-      <body className={cn(inter.className, "h-full")}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
-      </body>
-    </html>
+    <AppProvider>
+      <html lang="en" suppressHydrationWarning>
+        <head />
+        <body className={cn(inter.className, "h-full")}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <StoreInitializer>{children}</StoreInitializer>
+          </ThemeProvider>
+        </body>
+      </html>
+    </AppProvider>
   );
 }
