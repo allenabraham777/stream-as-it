@@ -12,7 +12,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@stream-as-it/ui";
-import { LogOut, Menu } from "lucide-react";
+import { LayoutDashboard, LogOut, Menu } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -45,8 +46,14 @@ const UserMenu = (props: Props) => {
           {user.name}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem onClick={signout}>
+        <DropdownMenuGroup className="py-2">
+          <Link href="/stream/dashboard">
+            <DropdownMenuItem className="py-2 cursor-pointer">
+              <LayoutDashboard className="mr-4 h-6 w-6" />
+              <span className="text-base">Dashboard</span>
+            </DropdownMenuItem>
+          </Link>
+          <DropdownMenuItem className="py-2 cursor-pointer" onClick={signout}>
             <LogOut className="mr-4 h-6 w-6" />
             <span className="text-base">Logout</span>
           </DropdownMenuItem>
