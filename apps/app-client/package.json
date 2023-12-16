@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.1",
+    "@stream-as-it/types": "*",
     "@stream-as-it/ui": "*",
     "axios": "^1.6.2",
     "lucide-react": "^0.295.0",
