@@ -1,0 +1,8 @@
+{
+  "name": "@stream-as-it/types",
+  "version": "0.0.1",
+  "description": "Types package for stream as it.",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true
+}
