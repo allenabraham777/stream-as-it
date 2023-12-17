@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 
 import { PrismaService, PRISMA_INJECTION_TOKEN } from '@stream-as-it/db';
-import { Auth } from '@stream-as-it/types';
+import { User } from '@stream-as-it/types';
 
 import { CreateStreamDTO } from './stream.dto';
 import { StreamSerializer } from './stream.serializer';
@@ -12,7 +12,7 @@ export class StreamService {
 
     async createStream(
         createStreamDto: CreateStreamDTO,
-        user: Auth.User,
+        user: User,
         serializeData: boolean = false
     ) {
         const { stream_title, stream_description } = createStreamDto;
@@ -34,7 +34,7 @@ export class StreamService {
         return stream;
     }
 
-    async findAllStreams(user: Auth.User, serializeData: boolean = false) {
+    async findAllStreams(user: User, serializeData: boolean = false) {
         const { id, account_id } = user;
         const streams = await this.prisma.stream.findMany({
             where: { account_id, user_id: id }
@@ -45,7 +45,7 @@ export class StreamService {
         return streams;
     }
 
-    async findStreamById(id: number, user: Auth.User, serializeData: boolean = false) {
+    async findStreamById(id: number, user: User, serializeData: boolean = false) {
         const { id: user_id, account_id } = user;
         const stream = await this.prisma.stream.findFirst({
             where: { id, user_id, account_id }
@@ -59,7 +59,7 @@ export class StreamService {
         return stream;
     }
 
-    async removeStreamById(id: number, user: Auth.User) {
+    async removeStreamById(id: number, user: User) {
         const { id: user_id, account_id } = user;
         try {
             await this.prisma.stream.deleteSoft({

@@ -4,7 +4,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { ZodValidationPipe } from '@stream-as-it/pipes';
 import { BaseController } from '@stream-as-it/server-class';
-import { Auth } from '@stream-as-it/types';
+import { User } from '@stream-as-it/types';
 
 import { StreamService } from './stream.service';
 import { CreateStreamDTO } from './stream.dto';
@@ -22,7 +22,7 @@ export class StreamController extends BaseController {
 
     @Post('new')
     async create(
-        @Request() req: { user: Auth.User },
+        @Request() req: { user: User },
         @Body(new ZodValidationPipe(CreateStreamSchema))
         createStreamDto: CreateStreamDTO
     ) {
@@ -32,21 +32,21 @@ export class StreamController extends BaseController {
     }
 
     @Get()
-    async findAll(@Request() req: { user: Auth.User }) {
+    async findAll(@Request() req: { user: User }) {
         const { user } = req;
         const streams = await this.streamService.findAllStreams(user);
         return this.serializeData(streams, StreamSerializer);
     }
 
     @Get(':id')
-    async findOne(@Request() req: { user: Auth.User }, @Param('id') id: string) {
+    async findOne(@Request() req: { user: User }, @Param('id') id: string) {
         const { user } = req;
         const stream = await this.streamService.findStreamById(+id, user);
         return this.serializeData(stream, StreamSerializer);
     }
 
     @Delete(':id')
-    async remove(@Request() req: { user: Auth.User }, @Param('id') id: string) {
+    async remove(@Request() req: { user: User }, @Param('id') id: string) {
         const { user } = req;
         return await this.streamService.removeStreamById(+id, user);
     }

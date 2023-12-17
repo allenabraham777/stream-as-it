@@ -1,1 +1,1 @@
-export * from "./namespaces/auth";
+export * from './namespaces/auth';

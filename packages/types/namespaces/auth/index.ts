@@ -1,8 +1,6 @@
-export declare namespace Auth {
-  interface User {
+export interface User {
     id: number;
     account_id: number;
     name: string;
     email: string;
-  }
 }

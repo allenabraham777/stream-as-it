@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Auth } from '@stream-as-it/types';
+import { User } from '@stream-as-it/types';
 
 import { getUserDetails } from '@/store/thunks/authThunk';
 
 interface AuthState {
     loading: boolean;
-    user: Auth.User | null;
+    user: User | null;
 }
 
 const initialState: AuthState = {
@@ -26,13 +26,10 @@ const authSlice = createSlice({
             .addCase(getUserDetails.pending, (state: AuthState) => {
                 state.loading = true;
             })
-            .addCase(
-                getUserDetails.fulfilled,
-                (state: AuthState, action: PayloadAction<Auth.User>) => {
-                    state.loading = false;
-                    state.user = action.payload;
-                }
-            )
+            .addCase(getUserDetails.fulfilled, (state: AuthState, action: PayloadAction<User>) => {
+                state.loading = false;
+                state.user = action.payload;
+            })
             .addCase(getUserDetails.rejected, (state: AuthState) => {
                 state.user = null;
                 state.loading = true;
