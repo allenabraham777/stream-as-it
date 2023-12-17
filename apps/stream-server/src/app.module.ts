@@ -6,8 +6,8 @@ import { TwitchGateway } from './stream/twitch.gateway';
 import { YoutubeGateway } from './stream/youtube.gateway';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService, JwtService, YoutubeGateway, TwitchGateway],
+    imports: [],
+    controllers: [AppController],
+    providers: [AppService, JwtService, YoutubeGateway, TwitchGateway]
 })
 export class AppModule {}
