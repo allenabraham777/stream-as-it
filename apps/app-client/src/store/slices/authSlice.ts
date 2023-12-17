@@ -1,43 +1,43 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Auth } from "@stream-as-it/types";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Auth } from '@stream-as-it/types';
 
-import { getUserDetails } from "@/store/thunks/authThunk";
+import { getUserDetails } from '@/store/thunks/authThunk';
 
 interface AuthState {
-  loading: boolean;
-  user: Auth.User | null;
+    loading: boolean;
+    user: Auth.User | null;
 }
 
 const initialState: AuthState = {
-  loading: true,
-  user: null,
+    loading: true,
+    user: null
 };
 
 const authSlice = createSlice({
-  name: "auth",
-  initialState,
-  reducers: {
-    clearUserDetails(state: AuthState) {
-      state.user = null;
-    },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(getUserDetails.pending, (state: AuthState) => {
-        state.loading = true;
-      })
-      .addCase(
-        getUserDetails.fulfilled,
-        (state: AuthState, action: PayloadAction<Auth.User>) => {
-          state.loading = false;
-          state.user = action.payload;
+    name: 'auth',
+    initialState,
+    reducers: {
+        clearUserDetails(state: AuthState) {
+            state.user = null;
         }
-      )
-      .addCase(getUserDetails.rejected, (state: AuthState) => {
-        state.user = null;
-        state.loading = true;
-      });
-  },
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(getUserDetails.pending, (state: AuthState) => {
+                state.loading = true;
+            })
+            .addCase(
+                getUserDetails.fulfilled,
+                (state: AuthState, action: PayloadAction<Auth.User>) => {
+                    state.loading = false;
+                    state.user = action.payload;
+                }
+            )
+            .addCase(getUserDetails.rejected, (state: AuthState) => {
+                state.user = null;
+                state.loading = true;
+            });
+    }
 });
 
 export const { clearUserDetails } = authSlice.actions;

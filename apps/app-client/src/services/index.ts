@@ -1,3 +1,3 @@
-import { AuthService } from "./auth.service";
+import { AuthService } from './auth.service';
 
-export const authService = new AuthService("http://localhost:8000");
+export const authService = new AuthService('http://localhost:8000');
