@@ -60,3 +60,6 @@ CREATE UNIQUE INDEX "User_email_account_id_key" ON "User"("email", "account_id")
 
 -- CreateIndex
 CREATE UNIQUE INDEX "StreamKey_stream_key_key" ON "StreamKey"("stream_key");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "StreamKey_stream_id_platform_deleted_at_key" ON "StreamKey"("stream_id", "platform", "deleted_at");

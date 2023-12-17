@@ -1,4 +1,4 @@
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Type } from 'class-transformer';
 
 @Exclude()
 export class StreamSerializer {
@@ -17,7 +17,30 @@ export class StreamSerializer {
     @Expose()
     readonly account_id: number;
 
+    @Expose()
+    @Type(() => StreamKeySerializer)
+    readonly stream_keys: StreamKeySerializer[];
+
     constructor(partial: Partial<StreamSerializer>) {
+        Object.assign(this, partial);
+    }
+}
+
+@Exclude()
+export class StreamKeySerializer {
+    @Expose()
+    readonly id: number;
+
+    @Expose()
+    readonly stream_id: number;
+
+    @Expose()
+    readonly platform: string;
+
+    @Expose()
+    readonly stream_key: string;
+
+    constructor(partial: Partial<StreamKeySerializer>) {
         Object.assign(this, partial);
     }
 }

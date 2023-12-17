@@ -10,3 +10,13 @@ export class CreateStreamDTO {
     @IsString()
     readonly stream_description: string;
 }
+
+export class AddStreamKeyDTO {
+    @ApiProperty()
+    @IsString()
+    readonly platform: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly stream_key: string;
+}

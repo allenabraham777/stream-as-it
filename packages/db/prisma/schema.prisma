@@ -75,4 +75,6 @@ model StreamKey {
 
   stream  Stream  @relation(fields: [stream_id], references: [id])
   account Account @relation(fields: [account_id], references: [id])
+
+  @@unique([stream_id, platform, deleted_at])
 }

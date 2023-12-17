@@ -7,9 +7,9 @@ import { BaseController } from '@stream-as-it/server-class';
 import { User } from '@stream-as-it/types';
 
 import { StreamService } from './stream.service';
-import { CreateStreamDTO } from './stream.dto';
+import { AddStreamKeyDTO, CreateStreamDTO } from './stream.dto';
 import { CreateStreamSchema } from './stream.schema';
-import { StreamSerializer } from './stream.serializer';
+import { StreamKeySerializer, StreamSerializer } from './stream.serializer';
 
 @ApiTags('stream')
 @ApiBearerAuth()
@@ -42,6 +42,8 @@ export class StreamController extends BaseController {
     async findOne(@Request() req: { user: User }, @Param('id') id: string) {
         const { user } = req;
         const stream = await this.streamService.findStreamById(+id, user);
+        console.log({ stream });
+
         return this.serializeData(stream, StreamSerializer);
     }
 
@@ -49,5 +51,16 @@ export class StreamController extends BaseController {
     async remove(@Request() req: { user: User }, @Param('id') id: string) {
         const { user } = req;
         return await this.streamService.removeStreamById(+id, user);
+    }
+
+    @Post(':stream_id/key/new')
+    async addStreamKey(
+        @Request() req: { user: User },
+        @Param('stream_id') stream_id: string,
+        @Body() addStreamKeyDTO: AddStreamKeyDTO
+    ) {
+        const { user } = req;
+        const streamKey = await this.streamService.addStreamKeys(addStreamKeyDTO, +stream_id, user);
+        return this.serializeData(streamKey, StreamKeySerializer);
     }
 }
