@@ -1,14 +1,18 @@
 module.exports = {
-    root: true,
-    env: { browser: true, es2020: true },
-    extends: [
-        'eslint:recommended',
-        'plugin:@typescript-eslint/recommended',
-        'plugin:react-hooks/recommended'
-    ],
-    ignorePatterns: ['build', '.eslintrc.cjs'],
     parser: '@typescript-eslint/parser',
-    plugins: ['prettier'],
+    parserOptions: {
+        project: 'tsconfig.json',
+        tsconfigRootDir: __dirname,
+        sourceType: 'module'
+    },
+    plugins: ['@typescript-eslint/eslint-plugin'],
+    extends: ['plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
+    root: true,
+    env: {
+        node: true,
+        jest: true
+    },
+    ignorePatterns: ['.eslintrc.js'],
     rules: {
         'prettier/prettier': ['error', {}, { usePrettierrc: true }],
         '@typescript-eslint/no-unused-vars': [

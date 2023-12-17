@@ -1,1 +1,1 @@
-export * from "./streamingTypes";
+export * from './streamingTypes';

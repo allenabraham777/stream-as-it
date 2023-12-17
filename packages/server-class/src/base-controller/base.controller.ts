@@ -2,14 +2,14 @@ import { ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
 
 @UseInterceptors(ClassSerializerInterceptor)
 export class BaseController {
-  serializeData<T>(
-    data: Partial<T> | Partial<T>[],
-    serializer: new (data: Partial<T>) => T,
-  ): T | T[] {
-    if (Array.isArray(data)) {
-      return data.map((item) => new serializer(item));
-    }
+    serializeData<T>(
+        data: Partial<T> | Partial<T>[],
+        serializer: new (data: Partial<T>) => T
+    ): T | T[] {
+        if (Array.isArray(data)) {
+            return data.map((item) => new serializer(item));
+        }
 
-    return new serializer(data);
-  }
+        return new serializer(data);
+    }
 }
