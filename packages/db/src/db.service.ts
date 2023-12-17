@@ -41,8 +41,10 @@ export class BasePrismaService extends PrismaClient implements OnModuleInit {
                 }
             },
             query: {
-                async $allOperations({ args, query }) {
-                    args.where = { deleted_at: null, ...args.where };
+                async $allOperations({ operation, args, query }) {
+                    if (operation !== 'create') {
+                        args.where = { deleted_at: null, ...args.where };
+                    }
                     return query(args);
                 }
             }
