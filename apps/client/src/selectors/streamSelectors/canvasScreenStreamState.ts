@@ -1,13 +1,13 @@
-import { selector } from "recoil";
-import streamState from "store/streamState";
+import { selector } from 'recoil';
+import streamState from 'store/streamState';
 
 const canvasScreenStreamState = selector({
-  key: "canvasScreenStreamState",
-  get: ({ get }) => {
-    const stream = get(streamState);
+    key: 'canvasScreenStreamState',
+    get: ({ get }) => {
+        const stream = get(streamState);
 
-    return stream.screen;
-  },
+        return stream.screen;
+    }
 });
 
 export default canvasScreenStreamState;

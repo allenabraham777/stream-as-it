@@ -1,14 +1,14 @@
-import { atom } from "recoil";
+import { atom } from 'recoil';
 
 interface IUser {
-  user: string;
+    user: string;
 }
 
 const authState = atom({
-  key: "authState",
-  default: {
-    user: "user@email.com",
-  } as IUser,
+    key: 'authState',
+    default: {
+        user: 'user@email.com'
+    } as IUser
 });
 
 export default authState;
