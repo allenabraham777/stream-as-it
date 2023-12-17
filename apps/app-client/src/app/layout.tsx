@@ -4,9 +4,9 @@ import './globals.css';
 
 import { cn } from '@stream-as-it/ui';
 import '@stream-as-it/ui/build/style.css';
-import { ThemeProvider } from '@/components/ThemeProvider';
+import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import AppProvider from '@/store/AppProvider';
-import StoreInitializer from '@/components/StoreInitializer';
+import StoreInitializer from '@/components/providers/StoreInitializer';
 
 const inter = Inter({ subsets: ['latin'] });
 

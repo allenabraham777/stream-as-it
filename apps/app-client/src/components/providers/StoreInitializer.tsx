@@ -1,7 +1,7 @@
 'use client';
 import { Dispatch } from '@/store/store';
 import { getUserDetails } from '@/store/thunks/authThunk';
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 type Props = {
@@ -13,7 +13,7 @@ const StoreInitializer = ({ children }: Props) => {
     useEffect(() => {
         dispatch(getUserDetails());
     }, [dispatch]);
-    return <>{children}</>;
+    return <Fragment>{children}</Fragment>;
 };
 
 export default StoreInitializer;

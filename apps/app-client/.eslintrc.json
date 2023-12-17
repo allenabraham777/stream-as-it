@@ -29,6 +29,7 @@
                 "argsIgnorePattern": "^(_|unused|props|...)"
             }
         ],
+        "@typescript-eslint/ban-types": "off",
         "semi": ["error", "always"]
     },
     "overrides": [

@@ -35,7 +35,7 @@ const Login = (props: Props) => {
             login(email, password)
                 .then((res) => router.push('/stream/dashboard'))
                 .then(() => dispatch(getUserDetails()))
-                .catch((e) => alert(e));
+                .catch((e) => alert(e?.response.data.message || 'Error logging you in!'));
         }
     };
 

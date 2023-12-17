@@ -16,4 +16,14 @@ export class AuthService {
         const { token } = data;
         return token;
     }
+
+    async register(account_name: string, email: string, name: string, password: string) {
+        const { data } = await this.httpClient.post('/auth/register', {
+            account_name,
+            email,
+            name,
+            password
+        });
+        return data;
+    }
 }
