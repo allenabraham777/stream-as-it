@@ -12,19 +12,31 @@ export class BasePrismaService extends PrismaClient implements OnModuleInit {
         return this.$extends({
             model: {
                 $allModels: {
-                    async deleteSoft<T>(
+                    async deleteSoft<T, U>(
                         this: T,
                         { where }: { where: Prisma.Args<T, 'delete'>['where'] }
-                    ): Promise<boolean> {
+                    ): Promise<Prisma.Result<T, U, 'update'>> {
                         const context = Prisma.getExtensionContext(this);
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        const result = await (context as any).update({
+                        return await (context as any).update({
                             where: { ...where, deleted_at: null },
                             data: {
                                 deleted_at: new Date()
                             }
                         });
-                        return result !== null;
+                    },
+                    async deleteManySoft<T, U>(
+                        this: T,
+                        { where }: { where: Prisma.Args<T, 'deleteMany'>['where'] }
+                    ): Promise<Prisma.Result<T, U, 'updateMany'>> {
+                        const context = Prisma.getExtensionContext(this);
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        return await (context as any).updateMany({
+                            where: { ...where, deleted_at: null },
+                            data: {
+                                deleted_at: new Date()
+                            }
+                        });
                     }
                 }
             },
