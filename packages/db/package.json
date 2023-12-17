@@ -7,7 +7,7 @@
   "main": "build/index.js",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "npm run clean && tsc",
     "clean": "rimraf build && rimraf coverage",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev --name init",
@@ -26,6 +26,7 @@
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
+    "@stream-as-it/tsconfig": "*",
     "@types/node": "^20.3.1",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",

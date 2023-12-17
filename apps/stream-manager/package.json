@@ -1,5 +1,5 @@
 {
-  "name": "stream-manager",
+  "name": "@stream-as-it/stream-manager",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -32,6 +32,7 @@
     "@stream-as-it/passport": "*",
     "@stream-as-it/pipes": "*",
     "@stream-as-it/server-class": "*",
+    "@stream-as-it/tsconfig": "*",
     "@stream-as-it/types": "*",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",

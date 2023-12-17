@@ -19,6 +19,7 @@
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
+    "@stream-as-it/tsconfig": "*",
     "@types/node": "^20.3.1",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",

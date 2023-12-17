@@ -8,7 +8,6 @@
     "build"
   ],
   "scripts": {
-    "dev": "vite",
     "build": "rimraf build && tsc && vite build && npm run build:styles",
     "build:styles": "postcss ./src/index.css -o ./build/style.css",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives",

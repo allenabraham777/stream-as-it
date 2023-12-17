@@ -11,7 +11,7 @@
     "build": "turbo build",
     "build:server": "turbo build --filter=@stream-as-it/server-base",
     "build:db": "turbo build --filter=@stream-as-it/db",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --concurrency 17",
     "lint": "node node_modules/turbo/bin/turbo lint",
     "prettier": "node node_modules/turbo/bin/turbo prettier",
     "prepare": "husky install"
