@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import './globals.css';
 
 import { cn } from '@stream-as-it/ui';
 import '@stream-as-it/ui/build/style.css';
+
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
-import AppProvider from '@/store/AppProvider';
-import StoreInitializer from '@/components/providers/StoreInitializer';
+import AuthProvider from '@/components/providers/AuthProvider';
+import Initializer from '@/components/providers/Initializer';
+
+import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,20 +19,20 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <AppProvider>
-            <html lang="en" suppressHydrationWarning>
-                <head />
-                <body className={cn(inter.className, 'h-full')}>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="system"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
-                        <StoreInitializer>{children}</StoreInitializer>
-                    </ThemeProvider>
-                </body>
-            </html>
-        </AppProvider>
+        <html lang="en" suppressHydrationWarning>
+            <head />
+            <body className={cn(inter.className, 'h-full')}>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    <AuthProvider>
+                        <Initializer>{children}</Initializer>
+                    </AuthProvider>
+                </ThemeProvider>
+            </body>
+        </html>
     );
 }

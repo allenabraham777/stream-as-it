@@ -22,7 +22,19 @@ export class UserSerializer {
 @Exclude()
 export class LoginResponseSerializer {
     @Expose()
-    readonly token: string;
+    readonly id: number;
+
+    @Expose()
+    readonly name: string;
+
+    @Expose()
+    readonly email: string;
+
+    @Expose()
+    readonly accessToken: string;
+
+    @Expose()
+    readonly refreshToken: string;
 
     constructor(partial: Partial<LoginResponseSerializer>) {
         Object.assign(this, partial);

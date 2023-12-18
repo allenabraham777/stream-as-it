@@ -1,6 +1,7 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import Link from 'next/link';
+import { signIn } from 'next-auth/react';
 
 import {
     Card,
@@ -13,30 +14,21 @@ import {
     Button,
     CardContent
 } from '@stream-as-it/ui';
-import { useLogin } from '@/hooks/auth/useLogin';
-import { useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
-import { Dispatch } from '@/store/store';
-import { getUserDetails } from '@/store/thunks/authThunk';
 
 interface Props {}
 
 const Login = (props: Props) => {
-    const dispatch = useDispatch<Dispatch>();
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    const { login } = useLogin();
-    const router = useRouter();
+    const dataRef = useRef({ email: '', password: '' });
 
     const submit = () => {
-        if (!email || !password) {
-            alert('Please enter information');
-        } else {
-            login(email, password)
-                .then((res) => router.push('/stream/dashboard'))
-                .then(() => dispatch(getUserDetails()))
-                .catch((e) => alert(e?.response.data.message || 'Error logging you in!'));
-        }
+        if (!dataRef.current.email || !dataRef.current.password) return;
+
+        signIn('credentials', {
+            email: dataRef.current.email,
+            password: dataRef.current.password,
+            redirect: true,
+            callbackUrl: '/stream/dashboard'
+        });
     };
 
     return (
@@ -52,8 +44,9 @@ const Login = (props: Props) => {
                         id="email"
                         type="email"
                         placeholder="m@example.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => {
+                            dataRef.current.email = e.target.value;
+                        }}
                     />
                 </div>
                 <div className="grid gap-2">
@@ -62,8 +55,9 @@ const Login = (props: Props) => {
                         id="password"
                         type="password"
                         placeholder="p@ssw0rd"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => {
+                            dataRef.current.password = e.target.value;
+                        }}
                     />
                 </div>
             </CardContent>

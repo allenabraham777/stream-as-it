@@ -90,15 +90,27 @@ export class AuthService {
             throw new HttpException('Please verify your email', HttpStatus.FORBIDDEN);
         }
 
-        const token = this.jwtService.sign({
-            id: user.id,
-            account_id: user.account_id
-        });
+        const accessToken = this.jwtService.sign(
+            {
+                id: user.id,
+                account_id: user.account_id
+            },
+            {
+                expiresIn: '2h'
+            }
+        );
+        const refreshToken = this.jwtService.sign(
+            {
+                id: user.id,
+                account_id: user.account_id
+            },
+            { secret: process.env.REFRESH_SECRET, expiresIn: '7d' }
+        );
         if (serializeData) {
-            return new LoginResponseSerializer({ token });
+            return new LoginResponseSerializer({ accessToken, refreshToken, ...user });
         }
 
-        return { token };
+        return { accessToken, refreshToken, ...user };
     }
 
     async verifyUser(userToken: string, verificationToken: string) {
@@ -115,7 +127,7 @@ export class AuthService {
                     email_verified: false
                 }
             });
-            await await t.user.update({
+            await t.user.update({
                 where: {
                     id: decoded.id,
                     account_id: decoded.account_id,

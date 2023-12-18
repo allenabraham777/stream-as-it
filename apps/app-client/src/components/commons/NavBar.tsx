@@ -1,11 +1,10 @@
 'use client';
 import React from 'react';
 import { useTheme } from 'next-themes';
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 import { Button, cn, ThemeToggle } from '@stream-as-it/ui';
-import Link from 'next/link';
-import { useSelector } from 'react-redux';
-import { StoreState } from '@/store/store';
 import UserMenu from './UserMenu';
 
 type Props = {
@@ -15,14 +14,14 @@ type Props = {
 
 const NavBar = (props: Props) => {
     const { setTheme } = useTheme();
-    const { user, loading } = useSelector((state: StoreState) => state.auth);
+    const { data: session, status } = useSession();
     return (
         <nav className={cn('flex w-full p-3 gap-4', { 'fixed top-0': props.fixed })}>
             <div className="flex-1"></div>
             <ThemeToggle setTheme={setTheme} />
-            {!props.hideButtons && (
+            {!props.hideButtons && status !== 'loading' && (
                 <>
-                    {!loading && !user ? (
+                    {!session?.user ? (
                         <>
                             <Link href="/login">
                                 <Button size="lg">Login</Button>

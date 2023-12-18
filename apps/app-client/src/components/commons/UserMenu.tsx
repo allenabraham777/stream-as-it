@@ -1,7 +1,9 @@
 'use client';
-import { useLogout } from '@/hooks/auth/useLogout';
-import { clearUserDetails } from '@/store/slices/authSlice';
-import { Dispatch, StoreState } from '@/store/store';
+import React from 'react';
+import { LayoutDashboard, LogOut, Menu } from 'lucide-react';
+import { signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
+
 import {
     Button,
     DropdownMenu,
@@ -12,25 +14,12 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger
 } from '@stream-as-it/ui';
-import { LayoutDashboard, LogOut, Menu } from 'lucide-react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import React, { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 interface Props {}
 
 const UserMenu = (props: Props) => {
-    const user = useSelector((state: StoreState) => state.auth.user);
-    const dispatch = useDispatch<Dispatch>();
-    const { logout } = useLogout();
-    const router = useRouter();
-
-    const signout = useCallback(() => {
-        logout();
-        dispatch(clearUserDetails());
-        router.push('/login');
-    }, [logout, router, dispatch]);
+    const { data } = useSession();
+    const user = data?.user;
 
     if (!user) return null;
 
@@ -41,8 +30,9 @@ const UserMenu = (props: Props) => {
                     <Menu />
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 mr-3">
+            <DropdownMenuContent className="w-80 mr-3">
                 <DropdownMenuLabel className="text-xl text-primary">{user.name}</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-base">{user.email}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup className="py-2">
                     <Link href="/stream/dashboard">
@@ -51,7 +41,7 @@ const UserMenu = (props: Props) => {
                             <span className="text-base">Dashboard</span>
                         </DropdownMenuItem>
                     </Link>
-                    <DropdownMenuItem className="py-2 cursor-pointer" onClick={signout}>
+                    <DropdownMenuItem className="py-2 cursor-pointer" onClick={() => signOut()}>
                         <LogOut className="mr-4 h-6 w-6" />
                         <span className="text-base">Logout</span>
                     </DropdownMenuItem>

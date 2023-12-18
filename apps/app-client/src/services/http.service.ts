@@ -1,20 +1,22 @@
+import { authOptions } from '@/app/api/auth/authOptions';
 import axios from 'axios';
+import { getServerSession } from 'next-auth';
+import { getSession } from 'next-auth/react';
 
 const httpClient = axios.create({});
 
 httpClient.interceptors.request.use(async function (config) {
     if (typeof window === 'undefined') {
-        const { cookies } = await import('next/headers.js');
-        const cookieStore = cookies();
-        const token = cookieStore.get('authToken')?.value;
+        const session = await getServerSession(authOptions);
+        const token = session?.tokens.accessToken;
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
             config.headers['Content-Type'] = 'application/json';
         }
         return config;
     } else {
-        const { getCookie } = await import('typescript-cookie');
-        const token = getCookie('authToken');
+        const session = await getSession();
+        const token = session?.tokens.accessToken;
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
             config.headers['Content-Type'] = 'application/json';
