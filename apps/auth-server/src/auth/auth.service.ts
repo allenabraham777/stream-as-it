@@ -90,22 +90,8 @@ export class AuthService {
             throw new HttpException('Please verify your email', HttpStatus.FORBIDDEN);
         }
 
-        const accessToken = this.jwtService.sign(
-            {
-                id: user.id,
-                account_id: user.account_id
-            },
-            {
-                expiresIn: '2h'
-            }
-        );
-        const refreshToken = this.jwtService.sign(
-            {
-                id: user.id,
-                account_id: user.account_id
-            },
-            { secret: process.env.REFRESH_SECRET, expiresIn: '7d' }
-        );
+        const { accessToken, refreshToken } = await this.getTokens(user.id, user.account_id);
+
         if (serializeData) {
             return new LoginResponseSerializer({ accessToken, refreshToken, ...user });
         }
@@ -155,5 +141,40 @@ export class AuthService {
             return new UserSerializer(user);
         }
         return user;
+    }
+
+    async refreshTokens(user_id: number, account_id: number) {
+        const tokens = await this.getTokens(user_id, account_id);
+        return tokens;
+    }
+
+    private async getTokens(user_id: number, account_id: number) {
+        const [accessToken, refreshToken] = await Promise.all([
+            this.jwtService.signAsync(
+                {
+                    user_id,
+                    account_id
+                },
+                {
+                    secret: process.env.JWT_SECRET,
+                    expiresIn: '1h'
+                }
+            ),
+            this.jwtService.signAsync(
+                {
+                    user_id,
+                    account_id
+                },
+                {
+                    secret: process.env.REFRESH_SECRET,
+                    expiresIn: '7d'
+                }
+            )
+        ]);
+
+        return {
+            accessToken,
+            refreshToken
+        };
     }
 }

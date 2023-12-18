@@ -42,6 +42,19 @@ export class LoginResponseSerializer {
 }
 
 @Exclude()
+export class RefreshTokenResponseSerializer {
+    @Expose()
+    readonly accessToken: string;
+
+    @Expose()
+    readonly refreshToken: string;
+
+    constructor(partial: Partial<RefreshTokenResponseSerializer>) {
+        Object.assign(this, partial);
+    }
+}
+
+@Exclude()
 export class UserVerificationResponseSerializer {
     @Expose()
     readonly status: boolean;

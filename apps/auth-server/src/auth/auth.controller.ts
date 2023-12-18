@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 import { RegisterUserDTO, LoginUserDTO } from './auth.dto';
 import {
     LoginResponseSerializer,
+    RefreshTokenResponseSerializer,
     UserSerializer,
     UserVerificationResponseSerializer
 } from './auth.serializer';
@@ -46,5 +47,13 @@ export class AuthController extends BaseController {
     async getUserDetails(@Request() req) {
         const user = await this.authService.getUserDetails(req.user);
         return this.serializeData(user, UserSerializer);
+    }
+
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt-refresh'))
+    @Get('refresh')
+    async refreshToken(@Request() req) {
+        const tokens = await this.authService.refreshTokens(req.user.id, req.user.account_id);
+        return this.serializeData(tokens, RefreshTokenResponseSerializer);
     }
 }
