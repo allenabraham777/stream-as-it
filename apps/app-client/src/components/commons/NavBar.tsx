@@ -16,7 +16,14 @@ const NavBar = (props: Props) => {
     const { setTheme } = useTheme();
     const { data: session, status } = useSession();
     return (
-        <nav className={cn('flex w-full p-3 gap-4', { 'fixed top-0': props.fixed })}>
+        <nav
+            className={cn(
+                'flex w-full p-3 gap-4 border-b border-secondary shadow-sm drop-shadow-sm',
+                {
+                    'fixed top-0': props.fixed
+                }
+            )}
+        >
             <div className="flex-1"></div>
             <ThemeToggle setTheme={setTheme} />
             {!props.hideButtons && status !== 'loading' && (

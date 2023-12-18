@@ -1,6 +1,5 @@
 import React from 'react';
 import { Plus } from 'lucide-react';
-import { getServerSession } from 'next-auth';
 import Link from 'next/link';
 
 import { Card } from '@stream-as-it/ui';
@@ -8,13 +7,10 @@ import { Stream } from '@stream-as-it/types';
 
 import { fetchAllStreams } from '@/api/stream';
 import StreamCard from '@/components/stream/StreamCard';
-import { authOptions } from '@/app/api/auth/authOptions';
 
 interface Props {}
 
 const Dashboard = async (props: Props) => {
-    const session = await getServerSession(authOptions);
-    if (!session) return null;
     const { data: streams } = await fetchAllStreams();
 
     return (

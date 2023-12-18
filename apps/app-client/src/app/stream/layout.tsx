@@ -12,7 +12,7 @@ const StreamLayout = async ({ children }: Props) => {
     const session = await getServerSession(authOptions);
     if (!session) return redirect('/login');
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col h-full">
             <NavBar />
             {children}
         </div>
