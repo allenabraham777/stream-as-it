@@ -1,6 +1,8 @@
 'use client';
 import React from 'react';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+
 import Loading from '../commons/Loading';
 
 type Props = {
@@ -8,9 +10,13 @@ type Props = {
 };
 
 const Initializer = ({ children }: Props) => {
-    const { status } = useSession();
+    const { status, data } = useSession();
+    const router = useRouter();
     if (status === 'loading') {
         return <Loading />;
+    } else if (data && data?.error) {
+        signOut();
+        router.push('/login');
     }
     return <>{children}</>;
 };
