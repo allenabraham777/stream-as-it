@@ -4,7 +4,7 @@ import { Injectable, ForbiddenException, Inject } from '@nestjs/common';
 import { PrismaService, PRISMA_INJECTION_TOKEN } from '@stream-as-it/db';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     constructor(@Inject(PRISMA_INJECTION_TOKEN) private prismaService: PrismaService) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
