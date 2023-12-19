@@ -1,9 +1,11 @@
+'use client';
+import React from 'react';
+
 import Controller from '@/components/stream/studio/Controller';
 import Screens from '@/components/stream/studio/Screens';
 import Settings from '@/components/stream/studio/Settings';
 import SideBar from '@/components/stream/studio/SideBar';
 import Slate from '@/components/stream/studio/Slate';
-import React from 'react';
 
 type Props = {
     params: {
@@ -11,7 +13,7 @@ type Props = {
     };
 };
 
-const StreamDashboard = async ({ params: { stream_id } }: Props) => {
+const StreamDashboard = ({ params: { stream_id } }: Props) => {
     return (
         <div className="flex h-full rounded-sm">
             <div className="flex-1 flex flex-col">

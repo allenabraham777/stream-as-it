@@ -9,6 +9,7 @@ import AuthProvider from '@/components/providers/AuthProvider';
 import Initializer from '@/components/providers/Initializer';
 
 import './globals.css';
+import StreamProvider from '@/components/providers/StreamProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -29,7 +30,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     disableTransitionOnChange
                 >
                     <AuthProvider>
-                        <Initializer>{children}</Initializer>
+                        <StreamProvider>
+                            <Initializer>{children}</Initializer>
+                        </StreamProvider>
                     </AuthProvider>
                 </ThemeProvider>
             </body>

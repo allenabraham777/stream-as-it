@@ -6,7 +6,7 @@ type Props = {};
 const Loading = (props: Props) => {
     return (
         <div className="h-full flex justify-center items-center">
-            <Loader2 className="w-24 h-24 animate-spin" />
+            <Loader2 className="w-24 h-24 animate-spin text-primary" />
         </div>
     );
 };
