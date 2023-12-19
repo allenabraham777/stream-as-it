@@ -11,6 +11,7 @@ interface IStore {
     };
     streamData: {
         videoStream: MediaStream | null;
+        screenShareStream: MediaStream | null;
         canvasStream: MediaStream | null;
     };
 }
@@ -26,6 +27,7 @@ const initialState: IStore = {
     },
     streamData: {
         videoStream: null,
+        screenShareStream: null,
         canvasStream: null
     }
 };
@@ -57,6 +59,20 @@ const streamSlice = createSlice({
             }
             state.streamData.videoStream = null;
         },
+        setScreenShareStream(state, action) {
+            state.streamData.screenShareStream = action.payload;
+        },
+        resetScreenShareStream(state) {
+            if (state.streamData.screenShareStream) {
+                const tracks = state.streamData.screenShareStream.getTracks();
+
+                tracks.forEach((track) => {
+                    console.info('Stopping Track: ' + track.kind);
+                    track.stop();
+                });
+            }
+            state.streamData.screenShareStream = null;
+        },
         setCanvasStream(state, action) {
             state.streamData.canvasStream = action.payload;
         },
@@ -71,9 +87,11 @@ export const {
     setVideoStatus,
     setScreenStatus,
     setVideoStream,
+    setScreenShareStream,
     setCanvasStream,
     setLiveStatus,
-    resetVideoStream
+    resetVideoStream,
+    resetScreenShareStream
 } = streamSlice.actions;
 
 export default streamSlice.reducer;

@@ -3,10 +3,10 @@ import { useState } from 'react';
 
 const useCamera = () => {
     const [stream, setStream] = useState<MediaStream | null>(null);
-    const startCamera = async () => {
+    const startCamera = async (video: { width: number; height: number }) => {
         const localStreamConstraints = {
             audio: true,
-            video: true
+            video
         };
         try {
             const newStream = await navigator.mediaDevices.getUserMedia(localStreamConstraints);
@@ -23,7 +23,7 @@ const useCamera = () => {
         const tracks = stream.getTracks();
 
         tracks.forEach((track) => {
-            console.info('Stopping Track: ' + track.kind);
+            console.info('Stopping Camera Track: ' + track.kind);
             track.stop();
         });
         setStream(null);

@@ -5,8 +5,10 @@ import { Mic, MicOff, ScreenShare, ScreenShareOff, Video, VideoOff } from 'lucid
 import { Button, cn } from '@stream-as-it/ui';
 
 import {
+    resetScreenShareStream,
     resetVideoStream,
     setAudioStatus,
+    setScreenShareStream,
     setScreenStatus,
     setVideoStatus,
     setVideoStream
@@ -14,6 +16,7 @@ import {
 import useAppSelector from '@/hooks/useAppSelector';
 import useAppDispatch from '@/hooks/useAppDispatch';
 import useCamera from '@/hooks/stream/useCamera';
+import useScreen from '@/hooks/stream/useScreen';
 
 type Props = {};
 
@@ -21,13 +24,35 @@ const Controller = (props: Props) => {
     const dispatch = useAppDispatch();
     const { audio, video, screen } = useAppSelector((state) => state.stream.streamStudioStatus);
     const { stream, startCamera, stopCamera } = useCamera();
+    const { screenShareStream, startScreenShare, stopScreenShare } = useScreen();
 
     useEffect(() => {
-        startCamera();
+        startCamera({
+            width: 1920,
+            height: 1080
+        }).catch((error) => {
+            dispatch(setAudioStatus(false));
+            dispatch(setVideoStatus(false));
+            console.error(error);
+        });
         return () => {
             stopCamera();
         };
     }, []);
+
+    useEffect(() => {
+        if (screen) {
+            startScreenShare().catch((error) => {
+                dispatch(setScreenStatus(false));
+                console.error(error);
+            });
+        } else {
+            stopScreenShare();
+        }
+        return () => {
+            stopScreenShare();
+        };
+    }, [screen]);
 
     useEffect(() => {
         dispatch(setVideoStream(stream));
@@ -36,6 +61,17 @@ const Controller = (props: Props) => {
             dispatch(resetVideoStream());
         };
     }, [stream]);
+
+    useEffect(() => {
+        if (!screenShareStream && screen) {
+            dispatch(setScreenStatus(false));
+        }
+        dispatch(setScreenShareStream(screenShareStream));
+
+        return () => {
+            dispatch(resetScreenShareStream());
+        };
+    }, [screenShareStream]);
 
     const toggleAudio = useCallback(() => {
         dispatch(setAudioStatus(!audio));
