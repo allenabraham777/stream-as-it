@@ -6,7 +6,7 @@ import { Button, cn } from '@stream-as-it/ui';
 
 import useAppDispatch from '@/hooks/useAppDispatch';
 import useAppSelector from '@/hooks/useAppSelector';
-import { setAudioStatus, setVideoStatus } from '@/store';
+import { setAudioStatus, setCanvasVideoStatus, setVideoStatus } from '@/store';
 import ReactPlayer from 'react-player';
 import { useSession } from 'next-auth/react';
 
@@ -16,6 +16,7 @@ const Video = (props: Props) => {
     const { data } = useSession();
     const dispatch = useAppDispatch();
     const { audio, video } = useAppSelector((state) => state.stream.streamStudioStatus);
+    const { video: videoStatus } = useAppSelector((state) => state.slate.loadStatus);
     const { videoStream } = useAppSelector((state) => state.stream.streamData);
 
     const toggleAudio = useCallback(() => {
@@ -25,6 +26,10 @@ const Video = (props: Props) => {
     const toggleVideo = useCallback(() => {
         dispatch(setVideoStatus(!video));
     }, [video]);
+
+    const toggleCanvasVideo = useCallback(() => {
+        dispatch(setCanvasVideoStatus(!videoStatus));
+    }, [videoStatus]);
 
     return (
         <div className="aspect-video bg-black h-36 relative rounded-md overflow-hidden group cursor-pointer">
@@ -49,9 +54,12 @@ const Video = (props: Props) => {
                     {video ? <VideoIcon className="h-4 w-4" /> : <VideoOff className="h-4 w-4" />}
                 </Button>
             </p>
-            <Button className="hidden group-hover:flex absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] gap-2">
+            <Button
+                className="hidden group-hover:flex absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] gap-2 z-10"
+                onClick={toggleCanvasVideo}
+            >
                 <Plus />
-                <span>Add to Slate</span>
+                {videoStatus ? <span>Remove from Slate</span> : <span>Add to Slate</span>}
             </Button>
             <ReactPlayer
                 url={video ? (videoStream as MediaStream) : undefined}
@@ -60,6 +68,7 @@ const Video = (props: Props) => {
                 height="100%"
                 playing
                 muted
+                id="user-video"
             />
             <div className="w-full p-1 absolute bottom-0 left-0 bg-primary text-primary-foreground text-sm flex gap-2">
                 <User className="h-5" />

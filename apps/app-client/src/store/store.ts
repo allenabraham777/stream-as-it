@@ -1,9 +1,11 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 import streamSlice from './slices/streamSlice';
+import slateSlice from './slices/slateSlice';
 
 const reducer = combineReducers({
-    stream: streamSlice
+    stream: streamSlice,
+    slate: slateSlice
 });
 
 const store = configureStore({

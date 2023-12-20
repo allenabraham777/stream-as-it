@@ -28,6 +28,26 @@ declare global {
             streamData: Stream.IStreamData;
         }
     }
+
+    export namespace Slate {
+        interface ILoadStatus {
+            video: boolean;
+            audio: boolean;
+            screen: boolean;
+        }
+
+        interface ISlateSlice {
+            loadStatus: ILoadStatus;
+        }
+    }
+
+    export namespace Brand {
+        interface IBrand {
+            color: string;
+            shape: string;
+            background: string;
+        }
+    }
 }
 
 export {};
