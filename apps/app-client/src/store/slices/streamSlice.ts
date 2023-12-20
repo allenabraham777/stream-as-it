@@ -1,22 +1,10 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface IStore {
-    streamStudioStatus: {
-        video: boolean;
-        audio: boolean;
-        screen: boolean;
-    };
-    streamStatus: {
-        isLive: boolean;
-    };
-    streamData: {
-        videoStream: MediaStream | null;
-        screenShareStream: MediaStream | null;
-        canvasStream: MediaStream | null;
-    };
-}
-
-const initialState: IStore = {
+const initialState: Stream.IStreamSlice = {
+    resolution: {
+        width: 1920,
+        height: 1080
+    },
     streamStudioStatus: {
         video: false,
         audio: false,
@@ -36,16 +24,16 @@ const streamSlice = createSlice({
     name: 'app/stream',
     initialState,
     reducers: {
-        setVideoStatus(state, action) {
+        setVideoStatus(state, action: PayloadAction<boolean>) {
             state.streamStudioStatus.video = action.payload;
         },
-        setAudioStatus(state, action) {
+        setAudioStatus(state, action: PayloadAction<boolean>) {
             state.streamStudioStatus.audio = action.payload;
         },
-        setScreenStatus(state, action) {
+        setScreenStatus(state, action: PayloadAction<boolean>) {
             state.streamStudioStatus.screen = action.payload;
         },
-        setVideoStream(state, action) {
+        setVideoStream(state, action: PayloadAction<MediaStream | null>) {
             state.streamData.videoStream = action.payload;
         },
         resetVideoStream(state) {
@@ -59,7 +47,7 @@ const streamSlice = createSlice({
             }
             state.streamData.videoStream = null;
         },
-        setScreenShareStream(state, action) {
+        setScreenShareStream(state, action: PayloadAction<MediaStream | null>) {
             state.streamData.screenShareStream = action.payload;
         },
         resetScreenShareStream(state) {
@@ -73,11 +61,14 @@ const streamSlice = createSlice({
             }
             state.streamData.screenShareStream = null;
         },
-        setCanvasStream(state, action) {
+        setCanvasStream(state, action: PayloadAction<MediaStream | null>) {
             state.streamData.canvasStream = action.payload;
         },
-        setLiveStatus(state, action) {
+        setLiveStatus(state, action: PayloadAction<boolean>) {
             state.streamStatus.isLive = action.payload;
+        },
+        setResolution(state, action: PayloadAction<Stream.IResolution>) {
+            state.resolution = action.payload;
         }
     }
 });
@@ -91,7 +82,8 @@ export const {
     setCanvasStream,
     setLiveStatus,
     resetVideoStream,
-    resetScreenShareStream
+    resetScreenShareStream,
+    setResolution
 } = streamSlice.actions;
 
 export default streamSlice.reducer;

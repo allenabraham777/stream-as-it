@@ -1,9 +1,10 @@
-import { Typography } from '@stream-as-it/ui';
 import React from 'react';
+
+import { Typography } from '@stream-as-it/ui';
 
 type Props = {};
 
-const Brand = () => {
+const Brand = (props: Props) => {
     return (
         <div className="p-8 flex flex-col gap-4">
             <Typography>Brand Color</Typography>
@@ -17,12 +18,4 @@ const Brand = () => {
     );
 };
 
-const Settings = (props: Props) => {
-    return (
-        <>
-            <Brand />
-        </>
-    );
-};
-
-export default Settings;
+export default Brand;

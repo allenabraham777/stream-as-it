@@ -1,25 +1,31 @@
 'use client';
-import { Button } from '@stream-as-it/ui';
-import { Layers, MessageSquareText, Palette, Settings } from 'lucide-react';
 import React from 'react';
 
-type Props = {};
+import { Button, cn } from '@stream-as-it/ui';
+import { tabList } from '@/constants/tabs';
 
-const SideBar = (props: Props) => {
+type Props = {
+    tab: string;
+    setTab: (value: string) => void;
+};
+
+const SideBar = ({ tab, setTab }: Props) => {
     return (
         <div className="flex flex-col">
-            <Button variant="ghost" className="h-20 rounded-none cursor-pointer">
-                <MessageSquareText className="h-10 w-10" />
-            </Button>
-            <Button variant="ghost" className="h-20 rounded-none cursor-pointer">
-                <Layers className="h-10 w-10" />
-            </Button>
-            <Button variant="ghost" className="h-20 rounded-none cursor-pointer">
-                <Palette className="h-10 w-10" />
-            </Button>
-            <Button variant="ghost" className="h-20 rounded-none cursor-pointer">
-                <Settings className="h-10 w-10" />
-            </Button>
+            {tabList.map(({ name, icon: Icon }) => {
+                return (
+                    <Button
+                        variant="ghost"
+                        className={cn('h-20 rounded-none cursor-pointer', {
+                            'bg-green-500 hover:bg-green-500 bg-opacity-40 hover:bg-opacity-40':
+                                tab === name
+                        })}
+                        onClick={() => setTab(name)}
+                    >
+                        <Icon className="h-10 w-10" />
+                    </Button>
+                );
+            })}
         </div>
     );
 };

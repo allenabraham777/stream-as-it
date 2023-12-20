@@ -3,8 +3,7 @@ import React from 'react';
 
 import Controller from '@/components/stream/studio/Controller';
 import Screens from '@/components/stream/studio/Screens';
-import Settings from '@/components/stream/studio/Settings';
-import SideBar from '@/components/stream/studio/SideBar';
+import Configurations from '@/components/stream/studio/Configurations';
 import Slate from '@/components/stream/studio/Slate';
 
 type Props = {
@@ -27,12 +26,7 @@ const StreamDashboard = ({ params: { stream_id } }: Props) => {
                     <Controller />
                 </div>
             </div>
-            <div className="h-full w-80 border-l border-secondary">
-                <Settings />
-            </div>
-            <div className="h-full w-24 border-l border-secondary">
-                <SideBar />
-            </div>
+            <Configurations />
         </div>
     );
 };
