@@ -1,53 +1,53 @@
+import { brand as brandConstants } from '@/constants/brand';
 import { fitImage } from './canvas';
-// import { getFgColor } from './colors';
-// import brandConstants from 'constants/brand';
+import { getFgColor } from './colors';
 
-// const drawUserLabel = (
-//     context: CanvasRenderingContext2D,
-//     text: string,
-//     brand: IBrand,
-//     x: number,
-//     y: number,
-//     height: number
-// ) => {
-//     context.font = `${height * 0.6}px Arial`;
-//     const width = Math.max(
-//         context.measureText(text).width + 0.4 * height,
-//         context.measureText('________').width
-//     );
-//     context.save();
-//     context.fillStyle = brand.color;
-//     context.strokeStyle = brand.color;
+const drawUserLabel = (
+    context: CanvasRenderingContext2D,
+    text: string,
+    brand: Brand.IBrand,
+    x: number,
+    y: number,
+    height: number
+) => {
+    context.font = `${height * 0.6}px Arial`;
+    const width = Math.max(
+        context.measureText(text).width + 0.4 * height,
+        context.measureText('________').width
+    );
+    context.save();
+    context.fillStyle = brand.color;
+    context.strokeStyle = brand.color;
 
-//     let textX, textY;
+    let textX, textY;
 
-//     switch (brand.shape) {
-//         case brandConstants.shapes.BUBBLE:
-//             context.roundRect(
-//                 x + height / 2,
-//                 y - height / 2,
-//                 width + height / 2,
-//                 height,
-//                 height / 2
-//             );
-//             context.fill();
-//             textX = x + (width + height / 2) / 2 + height / 2;
-//             textY = y;
-//             break;
-//         case brandConstants.shapes.RECTANGLE:
-//         default:
-//             context.fillRect(x, y, width, height);
-//             textX = x + width / 2;
-//             textY = y + height / 2;
-//             break;
-//     }
+    switch (brand.shape) {
+        case brandConstants.shapes.BUBBLE:
+            context.roundRect(
+                x + height / 2,
+                y - height / 2,
+                width + height / 2,
+                height,
+                height / 2
+            );
+            context.fill();
+            textX = x + (width + height / 2) / 2 + height / 2;
+            textY = y;
+            break;
+        case brandConstants.shapes.RECTANGLE:
+        default:
+            context.fillRect(x, y, width, height);
+            textX = x + width / 2;
+            textY = y + height / 2;
+            break;
+    }
 
-//     context.fillStyle = getFgColor(brand.color);
-//     context.textAlign = 'center';
-//     context.textBaseline = 'middle';
-//     context.fillText(text, textX, textY);
-//     context.restore();
-// };
+    context.fillStyle = getFgColor(brand.color);
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+    context.fillText(text, textX, textY);
+    context.restore();
+};
 
 export const drawUserVideo = (
     context: CanvasRenderingContext2D,
@@ -57,7 +57,7 @@ export const drawUserVideo = (
     isScreenActive: boolean,
     canvasHeight: number,
     canvasWidth: number,
-    brand: { background: 'string' }
+    brand: Brand.IBrand
 ) => {
     if (!screen && !video) {
         context.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -65,8 +65,8 @@ export const drawUserVideo = (
         context.fillRect(0, 0, canvasWidth, canvasHeight);
         return;
     }
-    let videoElement: HTMLVideoElement | HTMLImageElement = document.querySelector(
-        '#user-video video'
+    let videoElement: HTMLVideoElement | HTMLImageElement = document.getElementById(
+        'user-video'
     ) as HTMLVideoElement;
 
     if (!video) return;
@@ -85,7 +85,7 @@ export const drawUserVideo = (
         y = (3 * canvasHeight) / 8;
     }
 
-    if (isVideoActive) {
+    if (isVideoActive && videoElement) {
         width = videoElement.videoWidth;
         height = videoElement.videoHeight;
     } else {
@@ -114,8 +114,8 @@ export const drawUserVideo = (
         width,
         height
     );
-    // const labelHeight = screen && isScreenActive ? 0.1 * maxPrintHeight : 0.04 * maxPrintHeight;
-    // drawUserLabel(context, 'Allen', brand, x, y + maxPrintHeight - labelHeight, labelHeight);
+    const labelHeight = screen && isScreenActive ? 0.1 * maxPrintHeight : 0.04 * maxPrintHeight;
+    drawUserLabel(context, 'Allen', brand, x, y + maxPrintHeight - labelHeight, labelHeight);
 };
 export const drawScreenShareVideo = (
     context: CanvasRenderingContext2D,
