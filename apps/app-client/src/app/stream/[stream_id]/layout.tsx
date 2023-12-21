@@ -1,6 +1,9 @@
-import { getStreamById } from '@/api/stream';
-import { Typography } from '@stream-as-it/ui';
 import React from 'react';
+
+import { Typography } from '@stream-as-it/ui';
+
+import { getStreamById } from '@/api/stream';
+import SocketProvider from '@/components/providers/SocketProvider';
 
 type Props = {
     children: React.ReactNode;
@@ -12,7 +15,11 @@ type Props = {
 const Layout = async ({ children, params: { stream_id } }: Props) => {
     try {
         await getStreamById(stream_id);
-        return <div className="h-full">{children}</div>;
+        return (
+            <SocketProvider>
+                <div className="h-full">{children}</div>;
+            </SocketProvider>
+        );
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         const message = error?.response?.data?.message || 'Something went wrong';
