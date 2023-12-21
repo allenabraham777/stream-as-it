@@ -5,6 +5,7 @@ import { TABS } from '@/constants/tabs';
 import SideBar from './SideBar';
 import Brand from './configurations/Brand';
 import Settings from './configurations/Settings';
+import Broadcast from './configurations/Broadcast';
 
 type Props = {};
 
@@ -19,10 +20,13 @@ const Configuration = (props: Props) => {
             tabArray = [];
             break;
         case TABS.BRAND.name:
-            tabArray = [<Brand />];
+            tabArray = [<Brand key="brand" />];
             break;
         case TABS.SETTINGS.name:
-            tabArray = [<Settings />];
+            tabArray = [<Settings key="settings" />];
+            break;
+        case TABS.BROADCAST.name:
+            tabArray = [<Broadcast key="broadcast" />];
             break;
     }
     return (

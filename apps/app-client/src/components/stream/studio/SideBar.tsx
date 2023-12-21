@@ -21,6 +21,7 @@ const SideBar = ({ tab, setTab }: Props) => {
                                 tab === name
                         })}
                         onClick={() => setTab(name)}
+                        key={name}
                     >
                         <Icon className="h-10 w-10" />
                     </Button>

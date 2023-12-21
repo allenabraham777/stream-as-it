@@ -1,12 +1,17 @@
+import { Socket } from 'socket.io-client';
+
 let canvasStream: MediaStream | null;
+let mediaRecorder: MediaRecorder | null;
+let gainNode: GainNode;
 
 export const startStream = (
     stream: MediaStream | null,
     screenStream: MediaStream | null,
     isScreenInCanvas: boolean,
-    cameraAudio: boolean
+    cameraAudio: boolean,
+    socket: Socket
 ) => {
-    const slate = document.getElementById('slate') as HTMLCanvasElement;
+    const slate = document.getElementById('slate-canvas') as HTMLCanvasElement;
     canvasStream = slate.captureStream(30);
     if (!canvasStream) {
         canvasStream = new MediaStream();
@@ -15,14 +20,16 @@ export const startStream = (
     const audioContext = new AudioContext();
     const audios = [];
 
+    const source = audioContext.createMediaStreamSource(stream as MediaStream);
     const destination = audioContext.createMediaStreamDestination();
-
+    gainNode = audioContext.createGain();
     if (cameraAudio) {
-        const audioTracks = stream?.getAudioTracks();
-        if (audioTracks && audioTracks.length > 0) {
-            audios.push(audioContext.createMediaStreamSource(stream!));
-        }
+        gainNode.gain.value = 1;
+    } else {
+        gainNode.gain.value = 0;
     }
+    source.connect(gainNode);
+    gainNode.connect(destination);
 
     if (isScreenInCanvas) {
         const screenAudioTracks = screenStream?.getAudioTracks();
@@ -35,22 +42,44 @@ export const startStream = (
         audio.connect(destination);
     });
 
-    if (audios.length) {
-        canvasStream.addTrack(destination.stream.getAudioTracks()[0]);
-    }
+    const tracks = destination.stream.getAudioTracks();
 
-    const output = document.getElementById('output-video') as HTMLVideoElement;
-    output.srcObject = canvasStream;
+    if (tracks.length) canvasStream.addTrack(tracks[0]);
+
+    broadcast(socket, canvasStream as MediaStream);
 };
 
-export const stopStream = () => {
+export const toggleMute = (cameraAudio: boolean) => {
+    if (gainNode && gainNode?.gain) {
+        gainNode.gain.value = cameraAudio ? 1 : 0;
+    }
+};
+
+const broadcast = (socket: Socket, stream: MediaStream) => {
     if (canvasStream) {
+        mediaRecorder = new MediaRecorder(stream, {
+            mimeType: 'video/webm; codecs=vp8,opus'
+        });
+
+        mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+                socket.emit('stream:youtube', event.data);
+            }
+        };
+
+        mediaRecorder.start(100);
+    }
+};
+
+export const stopStream = (socket: Socket) => {
+    if (canvasStream) {
+        socket.emit('end:youtube');
         canvasStream.getTracks().forEach((track) => {
             if (track.kind === 'video') track.stop();
         });
         canvasStream = null;
     }
-
-    const output = document.getElementById('output-video') as HTMLVideoElement;
-    output.srcObject = canvasStream;
+    if (mediaRecorder) {
+        mediaRecorder.stop();
+    }
 };

@@ -2,6 +2,35 @@ import { brand as brandConstants } from '@/constants/brand';
 import { fitImage } from './canvas';
 import { getFgColor } from './colors';
 
+export const computeFrame = (
+    context: CanvasRenderingContext2D,
+    canvasHeight: number,
+    canvasWidth: number,
+    streamStudioStatus: Stream.IStreamStudioStatus,
+    video: boolean,
+    screen: boolean,
+    brand: Brand.IBrand
+) => {
+    drawUserVideo(
+        context,
+        video,
+        streamStudioStatus.video!,
+        screen,
+        streamStudioStatus.screen!,
+        canvasHeight,
+        canvasWidth,
+        brand
+    );
+    drawScreenShareVideo(
+        context,
+        video,
+        screen,
+        streamStudioStatus.screen!,
+        canvasHeight,
+        canvasWidth
+    );
+};
+
 const drawUserLabel = (
     context: CanvasRenderingContext2D,
     text: string,
@@ -49,7 +78,7 @@ const drawUserLabel = (
     context.restore();
 };
 
-export const drawUserVideo = (
+const drawUserVideo = (
     context: CanvasRenderingContext2D,
     video: boolean,
     isVideoActive: boolean,
@@ -61,7 +90,7 @@ export const drawUserVideo = (
 ) => {
     if (!screen && !video) {
         context.clearRect(0, 0, canvasWidth, canvasHeight);
-        context.fillStyle = 'green';
+        context.fillStyle = brand.background;
         context.fillRect(0, 0, canvasWidth, canvasHeight);
         return;
     }
@@ -117,7 +146,7 @@ export const drawUserVideo = (
     const labelHeight = screen && isScreenActive ? 0.1 * maxPrintHeight : 0.04 * maxPrintHeight;
     drawUserLabel(context, 'Allen', brand, x, y + maxPrintHeight - labelHeight, labelHeight);
 };
-export const drawScreenShareVideo = (
+const drawScreenShareVideo = (
     context: CanvasRenderingContext2D,
     video: boolean,
     screen: boolean,

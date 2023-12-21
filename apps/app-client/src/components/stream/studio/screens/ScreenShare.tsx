@@ -1,6 +1,6 @@
 'use client';
 import React, { useCallback } from 'react';
-import { User, Plus, ScreenShareOff, ScreenShare as ScreenShareIcon } from 'lucide-react';
+import { User, Plus, ScreenShareOff, ScreenShare as ScreenShareIcon, Minus } from 'lucide-react';
 
 import { Button, cn } from '@stream-as-it/ui';
 
@@ -36,7 +36,7 @@ const ScreenShare = (props: Props) => {
         >
             <p className="hidden group-hover:flex absolute right-2 top-2 gap-2 z-10">
                 <Button
-                    variant="icon"
+                    variant="default"
                     className={cn('cursor-pointer h-6 w-6 p-0', {
                         'text-background bg-blue-500 hover:bg-blue-400': screen,
                         'bg-secondary': !screen
@@ -54,7 +54,7 @@ const ScreenShare = (props: Props) => {
                 className="hidden group-hover:flex absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] gap-2 z-10"
                 onClick={toggleCanvasScreenVideo}
             >
-                <Plus />
+                {screenStatus ? <Minus /> : <Plus />}
                 {screenStatus ? <span>Remove from Slate</span> : <span>Add to Slate</span>}
             </Button>
             <ReactPlayer

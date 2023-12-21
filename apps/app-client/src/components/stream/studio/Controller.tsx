@@ -8,6 +8,7 @@ import {
     resetScreenShareStream,
     resetVideoStream,
     setAudioStatus,
+    setCanvasAudioStatus,
     setScreenShareStream,
     setScreenStatus,
     setVideoStatus,
@@ -72,6 +73,7 @@ const Controller = (props: Props) => {
 
     const toggleAudio = useCallback(() => {
         dispatch(setAudioStatus(!audio));
+        dispatch(setCanvasAudioStatus(!audio));
     }, [audio]);
 
     const toggleVideo = useCallback(() => {
