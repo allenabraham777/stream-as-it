@@ -8,7 +8,7 @@ const initialState: Slate.ISlateSlice = {
     }
 };
 
-const streamSlice = createSlice({
+const slateSlice = createSlice({
     name: 'app/slate',
     initialState,
     reducers: {
@@ -25,6 +25,6 @@ const streamSlice = createSlice({
 });
 
 export const { setCanvasAudioStatus, setCanvasVideoStatus, setCanvasScreenStatus } =
-    streamSlice.actions;
+    slateSlice.actions;
 
-export default streamSlice.reducer;
+export default slateSlice.reducer;
