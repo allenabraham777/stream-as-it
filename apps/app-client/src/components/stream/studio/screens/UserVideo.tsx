@@ -12,7 +12,7 @@ import { useSession } from 'next-auth/react';
 
 type Props = {};
 
-const Video = (props: Props) => {
+const UserVideo = (props: Props) => {
     const { data } = useSession();
     const dispatch = useAppDispatch();
     const { audio, video } = useAppSelector((state) => state.stream.streamStudioStatus);
@@ -32,8 +32,8 @@ const Video = (props: Props) => {
     }, [videoStatus]);
 
     return (
-        <div className="aspect-video bg-black h-36 relative rounded-md overflow-hidden group cursor-pointer">
-            <p className="hidden group-hover:flex absolute right-2 top-2 gap-2 z-10">
+        <div className="aspect-video h-36 relative rounded-md overflow-hidden group cursor-pointer">
+            <p className="absolute right-2 top-2 flex gap-2 z-10">
                 <Button
                     variant="icon"
                     className={cn('bg-secondary cursor-pointer h-6 w-6 p-0', {
@@ -62,13 +62,15 @@ const Video = (props: Props) => {
                 {videoStatus ? <span>Remove from Slate</span> : <span>Add to Slate</span>}
             </Button>
             <ReactPlayer
-                url={video ? (videoStream as MediaStream) : undefined}
+                url={video ? (videoStream as MediaStream) : '/assets/user.png'}
+                config={{
+                    file: { attributes: { poster: '/assets/user.png', id: 'user-video' } }
+                }}
                 style={{ height: '100%', width: '100%' }}
                 width="100%"
                 height="100%"
                 playing
                 muted
-                id="user-video"
             />
             <div className="w-full p-1 absolute bottom-0 left-0 bg-primary text-primary-foreground text-sm flex gap-2">
                 <User className="h-5" />
@@ -78,4 +80,4 @@ const Video = (props: Props) => {
     );
 };
 
-export default Video;
+export default UserVideo;

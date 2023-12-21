@@ -1,5 +1,5 @@
 import React from 'react';
-import Video from './screens/Video';
+import UserVideo from './screens/UserVideo';
 import ScreenShare from './screens/ScreenShare';
 
 type Props = {};
@@ -7,7 +7,7 @@ type Props = {};
 const Screens = (props: Props) => {
     return (
         <div className="flex gap-4">
-            <Video />
+            <UserVideo />
             <ScreenShare />
         </div>
     );

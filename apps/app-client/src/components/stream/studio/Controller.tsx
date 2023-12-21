@@ -27,10 +27,7 @@ const Controller = (props: Props) => {
     const { screenShareStream, startScreenShare, stopScreenShare } = useScreen();
 
     useEffect(() => {
-        startCamera({
-            width: 1920,
-            height: 1080
-        }).catch((error) => {
+        startCamera({ width: 1920, height: 1080 }).catch((error) => {
             dispatch(setAudioStatus(false));
             dispatch(setVideoStatus(false));
             console.error(error);

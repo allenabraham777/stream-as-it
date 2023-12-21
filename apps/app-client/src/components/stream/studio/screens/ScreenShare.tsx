@@ -6,7 +6,7 @@ import { Button, cn } from '@stream-as-it/ui';
 
 import useAppDispatch from '@/hooks/useAppDispatch';
 import useAppSelector from '@/hooks/useAppSelector';
-import { setScreenStatus } from '@/store';
+import { setCanvasScreenStatus, setScreenStatus } from '@/store';
 import ReactPlayer from 'react-player';
 import { useSession } from 'next-auth/react';
 
@@ -17,10 +17,15 @@ const ScreenShare = (props: Props) => {
     const dispatch = useAppDispatch();
     const { screen } = useAppSelector((state) => state.stream.streamStudioStatus);
     const { screenShareStream } = useAppSelector((state) => state.stream.streamData);
+    const { screen: screenStatus } = useAppSelector((state) => state.slate.loadStatus);
 
     const toggleScreen = useCallback(() => {
         dispatch(setScreenStatus(!screen));
     }, [screen]);
+
+    const toggleCanvasScreenVideo = useCallback(() => {
+        dispatch(setCanvasScreenStatus(!screenStatus));
+    }, [screenStatus]);
 
     return (
         <div
@@ -45,13 +50,17 @@ const ScreenShare = (props: Props) => {
                     )}
                 </Button>
             </p>
-            <Button className="hidden group-hover:flex absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] gap-2">
+            <Button
+                className="hidden group-hover:flex absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] gap-2 z-10"
+                onClick={toggleCanvasScreenVideo}
+            >
                 <Plus />
-                <span>Add to Slate</span>
+                {screenStatus ? <span>Remove from Slate</span> : <span>Add to Slate</span>}
             </Button>
             <ReactPlayer
                 url={screen ? (screenShareStream as MediaStream) : undefined}
                 style={{ height: '100%', width: '100%' }}
+                config={{ file: { attributes: { id: 'screen-video' } } }}
                 width="100%"
                 height="100%"
                 playing
