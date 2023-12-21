@@ -50,11 +50,12 @@ export class BaseStreamGateway implements OnGatewayConnection, OnGatewayDisconne
             const token: string = client?.handshake?.query?.token as string;
             if (!token) throw new Error('Access denied');
             const decoded = await this.jwtService.verify(token, {
-                secret: process.env.APP_JWT_SECRET
+                secret: process.env.JWT_SECRET
             });
-            this.users[client.id] = decoded.id;
+
+            this.users[client.id] = decoded.user_id;
             console.log(
-                `Streaming server socket connection established for user: ${decoded.id}, account: ${decoded.account_id} as client: ${client.id}`
+                `Streaming server socket connection established for user: ${decoded.user_id}, account: ${decoded.account_id} as client: ${client.id}`
             );
         } catch (error) {
             console.error(`Error creating connection with ${client.id}. Reason: ${error.message}`);
@@ -66,6 +67,11 @@ export class BaseStreamGateway implements OnGatewayConnection, OnGatewayDisconne
     handleDisconnect(client: Socket) {
         console.log(`Client disconnected: ${client.id}`);
         this.endAll(client);
+    }
+
+    @SubscribeMessage('healthcheck')
+    healthCheck(client: Socket) {
+        client.emit('healthresult', 'healthy');
     }
 
     @SubscribeMessage('end:all')
@@ -101,15 +107,20 @@ export class BaseStreamGateway implements OnGatewayConnection, OnGatewayDisconne
     }
 
     protected endStream(client: Socket, type: string) {
-        const ffmpegProcess: ffmpeg.FfmpegCommand = this.ffmpegProcesses[type][client.id];
-        const streamInput: PassThrough = this.streamInputs[type][client.id];
+        const ffmpegProcess: ffmpeg.FfmpegCommand = this.ffmpegProcesses[type]?.[client.id];
+        const streamInput: PassThrough = this.streamInputs[type]?.[client.id];
 
-        ffmpegProcess.kill('SIGINT');
-        streamInput.end();
-
-        delete this.ffmpegProcesses[type][client.id];
-        delete this.streamInputs[type][client.id];
-        delete this.streamKeys[type][client.id];
+        if (ffmpegProcess) {
+            ffmpegProcess?.kill('SIGINT');
+            delete this.ffmpegProcesses[type][client.id];
+        }
+        if (streamInput) {
+            streamInput?.end();
+            delete this.streamInputs[type][client.id];
+        }
+        if (this.streamKeys[type]?.[client.id]) {
+            delete this.streamKeys[type][client.id];
+        }
     }
 
     private setFFmpegProcess(
