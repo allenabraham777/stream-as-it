@@ -32,7 +32,7 @@ export class YoutubeGateway extends BaseStreamGateway {
 
     @SubscribeMessage('set:youtube')
     setYoutubeStreamKey(client: Socket, payload: { streamKey: string }) {
-        console.log(`Client disconnected: ${client.id}`);
+        console.log(`Set youtube for ${client.id}`);
         this.setStream(client, this.TYPE, this.BASE_URL, payload.streamKey);
     }
 

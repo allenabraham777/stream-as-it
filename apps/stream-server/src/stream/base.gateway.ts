@@ -101,7 +101,7 @@ export class BaseStreamGateway implements OnGatewayConnection, OnGatewayDisconne
 
     protected handleStream(client: Socket, type: string, data: Buffer) {
         const streamInput: PassThrough = this.streamInputs[type][client.id];
-        if (!streamInput.writableEnded) {
+        if (streamInput && !streamInput.writableEnded) {
             streamInput.write(data);
         }
     }
@@ -142,10 +142,10 @@ export class BaseStreamGateway implements OnGatewayConnection, OnGatewayDisconne
                 console.log(`FFmpeg process started for type: ${type} under client: ${clientId}`)
             )
             .on('error', (err) =>
-                console.error('FFmpeg error for type: ${type} under client: ${clientId}:', err)
+                console.error(`FFmpeg error for type: ${type} under client: ${clientId}:`, err)
             )
             .on('end', () =>
-                console.log('FFmpeg process ended for type: ${type} under client: ${clientId}')
+                console.log(`FFmpeg process ended for type: ${type} under client: ${clientId}`)
             );
         return ffmpegProcess;
     }
