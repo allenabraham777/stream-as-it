@@ -10,6 +10,7 @@ import Initializer from '@/components/providers/Initializer';
 
 import './globals.css';
 import StreamProvider from '@/components/providers/StreamProvider';
+import ToastProvider from '@/components/providers/ToastProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -31,7 +32,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 >
                     <AuthProvider>
                         <StreamProvider>
-                            <Initializer>{children}</Initializer>
+                            <ToastProvider>
+                                <Initializer>{children}</Initializer>
+                            </ToastProvider>
                         </StreamProvider>
                     </AuthProvider>
                 </ThemeProvider>

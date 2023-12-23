@@ -36,3 +36,5 @@ dist-ssr
 
 .turbo
 .next/**
+
+__pycache__

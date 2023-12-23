@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.1",
+    "@stream-as-it/constants": "*",
     "@stream-as-it/types": "*",
     "@stream-as-it/ui": "*",
     "axios": "^1.6.2",

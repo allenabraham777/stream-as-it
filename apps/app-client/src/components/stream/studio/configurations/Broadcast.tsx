@@ -1,26 +1,17 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import BroadcastButton from './broadcast-configurations/BroadcastButton';
-import { SocketContext } from '@/context/socketContext';
-import { Button } from '@stream-as-it/ui';
+import AddStreamKey from './broadcast-configurations/AddStreamKey';
+import StreamKeyList from './broadcast-configurations/StreamKeyList';
 
 type Props = {};
 
 const Broadcast = (props: Props) => {
-    const socketContext = useContext(SocketContext);
-
-    const connectYoutube = () => {
-        socketContext.socket?.emit('set:youtube', { streamKey: 'key' });
-    };
-
-    const startYoutube = () => {
-        socketContext.socket?.emit('start:youtube');
-    };
-
     return (
-        <div className="p-8 flex flex-col gap-4">
+        <div className="p-8 flex flex-col gap-4 h-full">
             <BroadcastButton />
-            <Button onClick={connectYoutube}>Youtube</Button>
-            <Button onClick={startYoutube}>Youtube Start</Button>
+            <StreamKeyList />
+            <div className="flex-1" />
+            <AddStreamKey />
         </div>
     );
 };

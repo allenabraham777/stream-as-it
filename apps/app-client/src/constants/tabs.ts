@@ -1,9 +1,9 @@
-import { MessageSquareText, Layers, Palette, Settings, Radio } from 'lucide-react';
+import { LucideMessageSquareText, Layers, Palette, Settings, Radio } from 'lucide-react';
 
 export const TABS = {
     CHAT: {
         name: 'CHAT',
-        icon: MessageSquareText
+        icon: LucideMessageSquareText
     },
     BANNER: { name: 'BANNER', icon: Layers },
     BRAND: { name: 'BRAND', icon: Palette },

@@ -1,3 +1,5 @@
+import { Stream as StreamType } from '@stream-as-it/types';
+
 declare global {
     export namespace Stream {
         interface IResolution {
@@ -46,6 +48,13 @@ declare global {
             color: string;
             shape: string;
             background: string;
+        }
+    }
+
+    export namespace Broadcast {
+        interface IBroadcast {
+            stream: null | StreamType;
+            loading: boolean;
         }
     }
 }

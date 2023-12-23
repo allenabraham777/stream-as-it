@@ -1,5 +1,7 @@
 import { Socket } from 'socket.io-client';
 
+import { StreamKey } from '@stream-as-it/types';
+
 let canvasStream: MediaStream | null;
 let mediaRecorder: MediaRecorder | null;
 let gainNode: GainNode;
@@ -9,7 +11,8 @@ export const startStream = (
     screenStream: MediaStream | null,
     isScreenInCanvas: boolean,
     cameraAudio: boolean,
-    socket: Socket
+    socket: Socket,
+    streamKeys: StreamKey[]
 ) => {
     const slate = document.getElementById('slate-canvas') as HTMLCanvasElement;
     canvasStream = slate.captureStream(30);
@@ -46,7 +49,7 @@ export const startStream = (
 
     if (tracks.length) canvasStream.addTrack(tracks[0]);
 
-    broadcast(socket, canvasStream as MediaStream);
+    broadcast(socket, canvasStream as MediaStream, streamKeys);
 };
 
 export const toggleMute = (cameraAudio: boolean) => {
@@ -55,7 +58,7 @@ export const toggleMute = (cameraAudio: boolean) => {
     }
 };
 
-const broadcast = (socket: Socket, stream: MediaStream) => {
+const broadcast = (socket: Socket, stream: MediaStream, streamKeys: StreamKey[]) => {
     if (canvasStream) {
         mediaRecorder = new MediaRecorder(stream, {
             mimeType: 'video/webm; codecs=vp8,opus'
@@ -63,7 +66,9 @@ const broadcast = (socket: Socket, stream: MediaStream) => {
 
         mediaRecorder.ondataavailable = (event) => {
             if (event.data.size > 0) {
-                socket.emit('stream:youtube', event.data);
+                streamKeys.forEach((streamKey) => {
+                    socket.emit(`stream:${streamKey.platform.toLowerCase()}`, event.data);
+                });
             }
         };
 
@@ -73,7 +78,7 @@ const broadcast = (socket: Socket, stream: MediaStream) => {
 
 export const stopStream = (socket: Socket) => {
     if (canvasStream) {
-        socket.emit('end:youtube');
+        socket.emit('end:all');
         canvasStream.getTracks().forEach((track) => {
             if (track.kind === 'video') track.stop();
         });
