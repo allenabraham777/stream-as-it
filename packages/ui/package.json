@@ -50,6 +50,7 @@
     "clsx": "^2.0.0",
     "lucide-react": "^0.294.0",
     "react-color": "^2.19.3",
+    "sonner": "^1.2.4",
     "tailwind-merge": "^2.1.0",
     "tailwindcss-animate": "^1.0.7"
   }
