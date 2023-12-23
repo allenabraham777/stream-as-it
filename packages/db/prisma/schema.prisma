@@ -67,7 +67,9 @@ model StreamKey {
   id         Int       @id @default(autoincrement())
   stream_id  Int
   platform   String
-  stream_key String    @unique
+  stream_key String
+  stream_url String?
+  video_id   String?
   account_id Int
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
