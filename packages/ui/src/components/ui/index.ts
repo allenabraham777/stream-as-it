@@ -5,3 +5,4 @@ export * from './input';
 export * from './label';
 export * from './typography';
 export * from './select';
+export * from './dialog';
