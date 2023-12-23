@@ -1,8 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { YouTubeLiveChat } from 'youtube-live-chat-ts';
-
-const handler = new YouTubeLiveChat(import.meta.env['VITE_GOOGLE_API_KEY']);
 
 function App() {
     const [data, setData] = useState<string[]>([]);
@@ -13,15 +10,10 @@ function App() {
     const startChat = async () => {
         const videoId = inputRef.current?.value;
         if (videoId) {
-            const liveChatId = await handler.getLiveChatIdFromVideoId(videoId);
-            handler.listen(liveChatId).subscribe((chatMessage) => {
-                if (chatMessage.snippet.type === 'textMessageEvent') {
-                    setData((prevData) => [
-                        ...prevData,
-                        `${chatMessage.authorDetails.displayName}: ${chatMessage.snippet.displayMessage}`
-                    ]);
-                }
-            });
+            const eventSource = new EventSource(`http://127.0.0.1:8000/chat/${videoId}`);
+            eventSource.onmessage = function (event) {
+                setData((prevData) => [...prevData, event.data]);
+            };
         }
     };
 
