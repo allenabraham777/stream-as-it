@@ -42,7 +42,6 @@ export class StreamController extends BaseController {
     async findOne(@Request() req: { user: User }, @Param('id') id: string) {
         const { user } = req;
         const stream = await this.streamService.findStreamById(+id, user);
-        console.log({ stream });
 
         return this.serializeData(stream, StreamSerializer);
     }

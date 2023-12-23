@@ -11,7 +11,6 @@ type Props = {
 };
 
 function loadSocket(token: string, setSocket: (value: Socket) => void) {
-    console.log('Socket');
     const socket = io('http://localhost:8003', { query: { token } });
     setSocket(socket);
 }

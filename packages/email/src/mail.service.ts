@@ -4,8 +4,6 @@ import { config } from 'dotenv';
 import { EmailType } from './mail.types';
 config();
 
-console.log(process.env.SMTP_HOST);
-
 @Injectable()
 export class MailService {
     private transporter = nodemailer.createTransport({
@@ -19,13 +17,12 @@ export class MailService {
     });
 
     async sendMail(data: EmailType) {
-        const mail = await this.transporter.sendMail({
+        await this.transporter.sendMail({
             from: process.env.FROM,
             to: data.to,
             subject: data.subject,
             text: data.text,
             html: data.html
         });
-        console.log({ mail });
     }
 }

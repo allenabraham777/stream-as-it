@@ -17,8 +17,6 @@ const slateSlice = createSlice({
                 state.stream = null;
             })
             .addCase(fetchStreamById.fulfilled, (state, action) => {
-                console.log(action);
-
                 state.loading = false;
                 state.stream = action.payload;
             })
