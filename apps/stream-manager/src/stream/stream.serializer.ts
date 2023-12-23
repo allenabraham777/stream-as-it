@@ -40,6 +40,9 @@ export class StreamKeySerializer {
     @Expose()
     readonly stream_key: string;
 
+    @Expose()
+    readonly video_id: string | null;
+
     constructor(partial: Partial<StreamKeySerializer>) {
         Object.assign(this, partial);
     }

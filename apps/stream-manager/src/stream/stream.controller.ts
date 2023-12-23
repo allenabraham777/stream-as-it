@@ -8,7 +8,7 @@ import { User } from '@stream-as-it/types';
 
 import { StreamService } from './stream.service';
 import { AddStreamKeyDTO, CreateStreamDTO } from './stream.dto';
-import { CreateStreamSchema } from './stream.schema';
+import { CreateStreamKeySchema, CreateStreamSchema } from './stream.schema';
 import { StreamKeySerializer, StreamSerializer } from './stream.serializer';
 
 @ApiTags('stream')
@@ -57,7 +57,7 @@ export class StreamController extends BaseController {
     async addStreamKey(
         @Request() req: { user: User },
         @Param('stream_id') stream_id: string,
-        @Body() addStreamKeyDTO: AddStreamKeyDTO
+        @Body(new ZodValidationPipe(CreateStreamKeySchema)) addStreamKeyDTO: AddStreamKeyDTO
     ) {
         const { user } = req;
         const streamKey = await this.streamService.addStreamKeys(addStreamKeyDTO, +stream_id, user);

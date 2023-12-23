@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateStreamDTO {
@@ -14,9 +14,18 @@ export class CreateStreamDTO {
 export class AddStreamKeyDTO {
     @ApiProperty()
     @IsString()
-    readonly platform: string;
+    readonly stream_url: string;
 
     @ApiProperty()
     @IsString()
     readonly stream_key: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly platform: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    readonly video_id: string;
 }
