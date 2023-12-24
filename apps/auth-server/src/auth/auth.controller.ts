@@ -53,7 +53,7 @@ export class AuthController extends BaseController {
     @UseGuards(AuthGuard('jwt-refresh'))
     @Get('refresh')
     async refreshToken(@Request() req) {
-        const tokens = await this.authService.refreshTokens(req.user.id, req.user.account_id);
+        const tokens = await this.authService.refreshTokens(req.user.user_id, req.user.account_id);
         return this.serializeData(tokens, RefreshTokenResponseSerializer);
     }
 }
