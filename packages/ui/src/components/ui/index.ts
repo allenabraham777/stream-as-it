@@ -7,3 +7,4 @@ export * from './typography';
 export * from './select';
 export * from './dialog';
 export * from './sonner';
+export * from './alert-dialog';
