@@ -11,3 +11,12 @@ export const getStreamById = (streamId: number) =>
 
 export const addStreamKey = (streamId: number, streamKey: Partial<StreamKey>) =>
     httpClient.post(`${BASE_URL}/stream/${streamId}/key/new`, streamKey);
+
+export const updateStreamKey = (
+    streamId: number,
+    streamKeyId: number,
+    streamKey: Partial<StreamKey>
+) => httpClient.put(`${BASE_URL}/stream/${streamId}/key/${streamKeyId}`, streamKey);
+
+export const deleteStreamKey = (streamId: number, streamKeyId: number) =>
+    httpClient.delete(`${BASE_URL}/stream/${streamId}/key/${streamKeyId}`);

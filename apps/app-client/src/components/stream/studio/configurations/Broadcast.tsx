@@ -1,6 +1,6 @@
 import React from 'react';
 import BroadcastButton from './broadcast-configurations/BroadcastButton';
-import AddStreamKey from './broadcast-configurations/AddStreamKey';
+import StreamKeyManager from './broadcast-configurations/StreamKeyManager';
 import StreamKeyList from './broadcast-configurations/StreamKeyList';
 
 type Props = {};
@@ -11,7 +11,7 @@ const Broadcast = (props: Props) => {
             <BroadcastButton />
             <StreamKeyList />
             <div className="flex-1" />
-            <AddStreamKey />
+            <StreamKeyManager />
         </div>
     );
 };

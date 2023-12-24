@@ -1,7 +1,7 @@
 'use client';
-import React, { useRef, useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { Loader, Plus } from 'lucide-react';
+import { Ban, CheckCircle2, Loader, Pencil, Plus } from 'lucide-react';
 
 import {
     Button,
@@ -19,17 +19,22 @@ import {
     SelectTrigger,
     SelectValue,
     Typography,
-    cn
+    cn,
+    toast
 } from '@stream-as-it/ui';
+import { StreamKey } from '@stream-as-it/types';
 
-import { addStreamKey } from '@/api/stream';
+import { addStreamKey, updateStreamKey } from '@/api/stream';
 import { fetchStreamById } from '@/store';
 import useAppDispatch from '@/hooks/useAppDispatch';
 import useAppSelector from '@/hooks/useAppSelector';
 
-type Props = {};
+type Props = {
+    isUpdate?: boolean;
+    streamKey?: StreamKey;
+};
 
-const AddStreamKey = (props: Props) => {
+const StreamKeyManager = ({ isUpdate = false, streamKey }: Props) => {
     const dispatch = useAppDispatch();
     const { loading: broadcastLoader } = useAppSelector((state) => state.broadcast);
     const { isLive } = useAppSelector((state) => state.stream.streamStatus);
@@ -37,14 +42,23 @@ const AddStreamKey = (props: Props) => {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const [streamPlatform, setStreamPlatform] = useState<string>('');
+    const [streamUrl, setStreamUrl] = useState<string>('');
+    const [streamKeyValue, setStreamKeyValue] = useState<string>('');
+    const [streamVideoId, setStreamVideoId] = useState<string>('');
     const [error, setError] = useState({
         url: '',
         key: '',
         platform: ''
     });
-    const streamUrlRef = useRef<HTMLInputElement>(null);
-    const streamKeyRef = useRef<HTMLInputElement>(null);
-    const streamVideoIdRef = useRef<HTMLInputElement>(null);
+
+    useLayoutEffect(() => {
+        if (!loading && open && isUpdate && streamKey) {
+            setStreamKeyValue(streamKey.stream_key);
+            setStreamUrl(streamKey.stream_url);
+            setStreamVideoId(streamKey.video_id || '');
+            setStreamPlatform(streamKey.platform);
+        }
+    }, [loading, open, streamKey]);
 
     const openDialog = () => {
         setOpen(true);
@@ -57,7 +71,9 @@ const AddStreamKey = (props: Props) => {
     };
 
     const onOpenChange = (status: boolean) => {
-        if (!status) closeDialog();
+        if (!status) {
+            closeDialog();
+        }
     };
 
     const onSave = async () => {
@@ -67,11 +83,11 @@ const AddStreamKey = (props: Props) => {
             key: ''
         };
         let isError: boolean = false;
-        if (!streamUrlRef.current?.value) {
+        if (!streamUrl) {
             _error['url'] = 'Stream url required';
             isError = true;
         }
-        if (!streamKeyRef.current?.value) {
+        if (!streamKeyValue) {
             _error['key'] = 'Stream key required';
             isError = true;
         }
@@ -83,44 +99,76 @@ const AddStreamKey = (props: Props) => {
         if (isError) return;
 
         const streamId = +searchParams.stream_id;
-        const stream_url = streamUrlRef.current!.value;
-        const stream_key = streamKeyRef.current!.value;
-        const video_id = streamVideoIdRef.current!.value || '';
-        const platform = streamPlatform || '';
+        const payload: Partial<StreamKey> = {
+            stream_url: streamUrl,
+            stream_key: streamKeyValue,
+            video_id: streamVideoId || ''
+        };
         setLoading(true);
         try {
-            await addStreamKey(streamId, { stream_url, stream_key, video_id, platform });
+            if (isUpdate) {
+                await updateStreamKey(streamId, streamKey!.id, payload);
+                toast('Stream key updated successfully', {
+                    icon: <CheckCircle2 className="text-primary" />
+                });
+            } else {
+                payload.platform = streamPlatform;
+                await addStreamKey(streamId, payload);
+                toast('Stream key created successfully', {
+                    icon: <CheckCircle2 className="text-primary" />
+                });
+            }
             dispatch(fetchStreamById(+searchParams.stream_id));
             setOpen(false);
-        } catch (error) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            toast('Stream key action failed', {
+                description: error?.response?.data.message || 'Please try again later!',
+                icon: <Ban className="text-destructive" />
+            });
             console.error(error);
         }
         setLoading(false);
     };
 
+    const content = {
+        title: isUpdate ? 'Add stream key' : 'Update stream key',
+        description: isUpdate
+            ? 'Update your stream key details'
+            : 'Add RTMP url and stream key to bind the platform with the stream'
+    };
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>
-                <Button
-                    className="w-full flex gap-2"
-                    onClick={openDialog}
-                    loader={broadcastLoader}
-                    disabled={broadcastLoader || isLive}
-                >
-                    <Plus />
-                    <>Add Stream Key</>
-                </Button>
+                {isUpdate ? (
+                    <Button size="sm" onClick={openDialog}>
+                        <Pencil />
+                    </Button>
+                ) : (
+                    <Button
+                        className="w-full flex gap-2"
+                        onClick={openDialog}
+                        loader={broadcastLoader}
+                        disabled={broadcastLoader || isLive}
+                    >
+                        <Plus />
+                        <>Add Stream Key</>
+                    </Button>
+                )}
             </DialogTrigger>
             <DialogContent>
-                <DialogHeader>Add stream client</DialogHeader>
-                <DialogDescription>
-                    Add RTMP url and stream key to bind the platform with the stream
-                </DialogDescription>
+                <DialogHeader>{content.title}</DialogHeader>
+                <DialogDescription>{content.description}</DialogDescription>
                 <div className="flex flex-col gap-8">
                     <div className="flex flex-col gap-2">
                         <Label htmlFor="stream-url">Stream url*</Label>
                         <div>
-                            <Input id="stream-url" ref={streamUrlRef} />
+                            <Input
+                                id="stream-url"
+                                value={streamUrl}
+                                onChange={({ target: { value } }) => setStreamUrl(value)}
+                            />
                             <Typography
                                 variant="small"
                                 className={cn('!text-red-600 hidden', { block: error.url })}
@@ -132,7 +180,11 @@ const AddStreamKey = (props: Props) => {
                     <div className="flex flex-col gap-2">
                         <Label htmlFor="stream-key">Stream key*</Label>
                         <div>
-                            <Input id="stream-key" ref={streamKeyRef} />
+                            <Input
+                                id="stream-key"
+                                value={streamKeyValue}
+                                onChange={({ target: { value } }) => setStreamKeyValue(value)}
+                            />
                             <Typography
                                 variant="small"
                                 className={cn('!text-red-600 hidden', { block: error.key })}
@@ -143,12 +195,20 @@ const AddStreamKey = (props: Props) => {
                     </div>
                     <div className="flex flex-col gap-2">
                         <Label htmlFor="video-id">Video</Label>
-                        <Input id="video-id" ref={streamVideoIdRef} />
+                        <Input
+                            id="video-id"
+                            value={streamVideoId}
+                            onChange={({ target: { value } }) => setStreamVideoId(value)}
+                        />
                     </div>
                     <div className="flex flex-col gap-2">
                         <Label>Stream platform*</Label>
                         <div>
-                            <Select onValueChange={setStreamPlatform} value={streamPlatform}>
+                            <Select
+                                onValueChange={setStreamPlatform}
+                                disabled={isUpdate}
+                                value={streamPlatform}
+                            >
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select a platform" />
                                 </SelectTrigger>
@@ -190,4 +250,4 @@ const AddStreamKey = (props: Props) => {
     );
 };
 
-export default AddStreamKey;
+export default StreamKeyManager;
