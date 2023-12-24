@@ -11,3 +11,9 @@ export const CreateStreamKeySchema = z.object({
     platform: z.string(),
     video_id: z.string().optional()
 });
+
+export const UpdateStreamKeySchema = z.object({
+    stream_url: z.string(),
+    stream_key: z.string(),
+    video_id: z.string().optional()
+});

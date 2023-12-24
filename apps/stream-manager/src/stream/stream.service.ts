@@ -3,7 +3,7 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { PrismaService, PRISMA_INJECTION_TOKEN } from '@stream-as-it/db';
 import { User } from '@stream-as-it/types';
 
-import { AddStreamKeyDTO, CreateStreamDTO } from './stream.dto';
+import { AddStreamKeyDTO, CreateStreamDTO, UpdateStreamKeyDTO } from './stream.dto';
 import { StreamKeySerializer, StreamSerializer } from './stream.serializer';
 
 @Injectable()
@@ -50,7 +50,7 @@ export class StreamService {
         const stream = await this.prisma.stream.findFirst({
             where: { id, user_id, account_id },
             include: {
-                stream_keys: true
+                stream_keys: { where: { deleted_at: null, stream_id: id, account_id } }
             }
         });
         if (!stream) {
@@ -72,6 +72,12 @@ export class StreamService {
                     account_id
                 }
             });
+            await this.prisma.streamKey.deleteManySoft({
+                where: {
+                    stream_id: id,
+                    account_id
+                }
+            });
         } catch (error) {
             if (error?.code === 'P2025') {
                 throw new HttpException('No such stream', HttpStatus.NOT_FOUND);
@@ -89,6 +95,19 @@ export class StreamService {
     ) {
         const { account_id } = user;
         const streamKey = await this.prisma.$transaction(async (t) => {
+            const existingStreamKey = await t.streamKey.findFirst({
+                where: {
+                    stream_id,
+                    platform: addStreamKeyDTO.platform,
+                    account_id
+                }
+            });
+            if (existingStreamKey) {
+                throw new HttpException(
+                    'Stream key already exists for the give platform',
+                    HttpStatus.CONFLICT
+                );
+            }
             const streamKey = await t.streamKey.create({
                 data: {
                     ...addStreamKeyDTO,
@@ -102,5 +121,66 @@ export class StreamService {
             return new StreamKeySerializer(streamKey);
         }
         return streamKey;
+    }
+
+    async updateStreamKeyById(
+        updateStreamKeyDTO: UpdateStreamKeyDTO,
+        id: number,
+        stream_id: number,
+        user: User,
+        serializeData: boolean = false
+    ) {
+        const { account_id } = user;
+        const streamKey = await this.prisma.$transaction(async (t) => {
+            const streamKey = await t.streamKey.findFirst({
+                where: {
+                    id,
+                    stream_id,
+                    account_id
+                }
+            });
+            if (!streamKey) {
+                throw new HttpException('No such stream key', HttpStatus.NOT_FOUND);
+            }
+            const updatedStreamKey = await t.streamKey.update({
+                where: {
+                    id,
+                    stream_id,
+                    account_id
+                },
+                data: {
+                    ...updateStreamKeyDTO
+                }
+            });
+            return updatedStreamKey;
+        });
+        if (serializeData) {
+            return new StreamKeySerializer(streamKey);
+        }
+        return streamKey;
+    }
+
+    async deleteStreamKeyById(id: number, stream_id: number, user: User) {
+        const { account_id } = user;
+        await this.prisma.$transaction(async (t) => {
+            const streamKey = await t.streamKey.findFirst({
+                where: {
+                    id,
+                    stream_id,
+                    account_id
+                }
+            });
+            if (!streamKey) {
+                throw new HttpException('No such stream key', HttpStatus.NOT_FOUND);
+            }
+            await t.streamKey.deleteSoft({
+                where: {
+                    id,
+                    stream_id,
+                    account_id
+                }
+            });
+        });
+        return { success: true };
     }
 }

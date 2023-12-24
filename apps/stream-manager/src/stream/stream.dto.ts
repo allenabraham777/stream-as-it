@@ -29,3 +29,18 @@ export class AddStreamKeyDTO {
     @IsOptional()
     readonly video_id: string;
 }
+
+export class UpdateStreamKeyDTO {
+    @ApiProperty()
+    @IsString()
+    readonly stream_url: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly stream_key: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    readonly video_id: string;
+}

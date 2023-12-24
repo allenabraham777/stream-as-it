@@ -38,6 +38,9 @@ export class StreamKeySerializer {
     readonly platform: string;
 
     @Expose()
+    readonly stream_url: string;
+
+    @Expose()
     readonly stream_key: string;
 
     @Expose()

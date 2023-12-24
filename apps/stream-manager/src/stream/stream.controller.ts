@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, Request } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Param,
+    Delete,
+    UseGuards,
+    Request,
+    Put
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -7,8 +17,8 @@ import { BaseController } from '@stream-as-it/server-class';
 import { User } from '@stream-as-it/types';
 
 import { StreamService } from './stream.service';
-import { AddStreamKeyDTO, CreateStreamDTO } from './stream.dto';
-import { CreateStreamKeySchema, CreateStreamSchema } from './stream.schema';
+import { AddStreamKeyDTO, CreateStreamDTO, UpdateStreamKeyDTO } from './stream.dto';
+import { CreateStreamKeySchema, CreateStreamSchema, UpdateStreamKeySchema } from './stream.schema';
 import { StreamKeySerializer, StreamSerializer } from './stream.serializer';
 
 @ApiTags('stream')
@@ -61,5 +71,32 @@ export class StreamController extends BaseController {
         const { user } = req;
         const streamKey = await this.streamService.addStreamKeys(addStreamKeyDTO, +stream_id, user);
         return this.serializeData(streamKey, StreamKeySerializer);
+    }
+
+    @Put(':stream_id/key/:stream_key_id')
+    async updateStreamKey(
+        @Request() req: { user: User },
+        @Param('stream_id') stream_id: string,
+        @Param('stream_key_id') stream_key_id: string,
+        @Body(new ZodValidationPipe(UpdateStreamKeySchema)) updateStreamKeyDTO: UpdateStreamKeyDTO
+    ) {
+        const { user } = req;
+        const streamKey = await this.streamService.updateStreamKeyById(
+            updateStreamKeyDTO,
+            +stream_key_id,
+            +stream_id,
+            user
+        );
+        return this.serializeData(streamKey, StreamKeySerializer);
+    }
+
+    @Delete(':stream_id/key/:stream_key_id')
+    async deleteStreamKey(
+        @Request() req: { user: User },
+        @Param('stream_id') stream_id: string,
+        @Param('stream_key_id') stream_key_id: string
+    ) {
+        const { user } = req;
+        return await this.streamService.deleteStreamKeyById(+stream_key_id, +stream_id, user);
     }
 }
