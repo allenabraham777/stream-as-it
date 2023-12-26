@@ -6,21 +6,21 @@ Stream As It is a web application that allows users to effortlessly stream conte
 
 ### Features
 
-- **One-Click Streaming:** Easily initiate streaming sessions with just a single click.
+-   **One-Click Streaming:** Easily initiate streaming sessions with just a single click.
 
-- **Multi-Platform Support:** Stream to various social media platforms simultaneously.
+-   **Multi-Platform Support:** Stream to various social media platforms simultaneously.
 
-- **No Installation Required:** Enjoy the convenience of streaming directly from the browser.
+-   **No Installation Required:** Enjoy the convenience of streaming directly from the browser.
 
 ## Tech Stack
 
-- **Frontend:** Built with React for a responsive and dynamic user interface.
+-   **Frontend:** Built with React for a responsive and dynamic user interface.
 
-- **Styling:** Utilizes TailwindCSS for a clean and modern design.
+-   **Styling:** Utilizes TailwindCSS for a clean and modern design.
 
-- **Backend:** Developed with NestJS, following the Model-View-Controller (MVC) pattern.
+-   **Backend:** Developed with NestJS, following the Model-View-Controller (MVC) pattern.
 
-- **Database:** PostgreSQL is used as the database to store relevant information.
+-   **Database:** PostgreSQL is used as the database to store relevant information.
 
 <div style="display:flex;">
   <img src="https://cdn1.iconfinder.com/data/icons/programing-development-8/24/react_logo-512.png" height="100"/>
@@ -61,9 +61,9 @@ npm install
 
 3.  **Database Setup:**
 
-- Create a PostgreSQL database and update the configuration in the backend.
+-   Create a PostgreSQL database and update the configuration in the backend.
 
-- Run migrations to set up the database schema.
+-   Run migrations to set up the database schema.
 
 4.  **Run the Application:**
 
@@ -101,15 +101,15 @@ This project draws inspiration from StreamYard, a leading streaming platform. It
 
 ## Plan of action
 
-- [x] Create UI with all basic functionality
-- [x] Setup NestJs backend
-- [x] Achieve basic streaming with hard coded url
-- [x] Migrate to NextJS
-- [x] Add Shadcn ui
-- [x] Implement authentication backend
-- [x] Bring authentication layer to frontend
-- [ ] Implement stream manager server
-- [x] Implement streaming server
-- [ ] Add reverse proxy
-- [ ] Combine swagger docs
-- [ ] Integrate apis with UI
+-   [x] Create UI with all basic functionality
+-   [x] Setup NestJs backend
+-   [x] Achieve basic streaming with hard coded url
+-   [x] Migrate to NextJS
+-   [x] Add Shadcn ui
+-   [x] Implement authentication backend
+-   [x] Bring authentication layer to frontend
+-   [x] Implement stream manager server
+-   [x] Implement streaming server
+-   [ ] Add reverse proxy
+-   [ ] Combine swagger docs
+-   [x] Integrate apis with UI
