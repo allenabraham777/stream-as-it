@@ -1,7 +1,5 @@
 import { Controller, Post, Body, Get, Param, UseGuards, Request } from '@nestjs/common';
-import { ZodValidationPipe } from '@stream-as-it/pipes';
 import { BaseController } from '@stream-as-it/server-class';
-import { CreateUserSchema, LoginUserSchema } from './auth.schema';
 import { AuthService } from './auth.service';
 import { RegisterUserDTO, LoginUserDTO } from './auth.dto';
 import {
@@ -21,16 +19,13 @@ export class AuthController extends BaseController {
     }
 
     @Post('register')
-    async register(
-        @Body(new ZodValidationPipe(CreateUserSchema))
-        createUserDto: RegisterUserDTO
-    ) {
+    async register(@Body() createUserDto: RegisterUserDTO) {
         const createdUser = await this.authService.register(createUserDto);
         return this.serializeData(createdUser, UserSerializer);
     }
 
     @Post('login')
-    async login(@Body(new ZodValidationPipe(LoginUserSchema)) loginUserDTO: LoginUserDTO) {
+    async login(@Body() loginUserDTO: LoginUserDTO) {
         const token = await this.authService.login(loginUserDTO);
         return this.serializeData(token, LoginResponseSerializer);
     }
