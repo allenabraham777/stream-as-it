@@ -12,13 +12,11 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
-import { ZodValidationPipe } from '@stream-as-it/pipes';
 import { BaseController } from '@stream-as-it/server-class';
 import { User } from '@stream-as-it/types';
 
 import { StreamService } from './stream.service';
 import { AddStreamKeyDTO, CreateStreamDTO, UpdateStreamKeyDTO } from './stream.dto';
-import { CreateStreamKeySchema, CreateStreamSchema, UpdateStreamKeySchema } from './stream.schema';
 import { StreamKeySerializer, StreamSerializer } from './stream.serializer';
 
 @ApiTags('stream')
@@ -33,7 +31,7 @@ export class StreamController extends BaseController {
     @Post('new')
     async create(
         @Request() req: { user: User },
-        @Body(new ZodValidationPipe(CreateStreamSchema))
+        @Body()
         createStreamDto: CreateStreamDTO
     ) {
         const user = req.user;
@@ -66,7 +64,7 @@ export class StreamController extends BaseController {
     async addStreamKey(
         @Request() req: { user: User },
         @Param('stream_id') stream_id: string,
-        @Body(new ZodValidationPipe(CreateStreamKeySchema)) addStreamKeyDTO: AddStreamKeyDTO
+        @Body() addStreamKeyDTO: AddStreamKeyDTO
     ) {
         const { user } = req;
         const streamKey = await this.streamService.addStreamKeys(addStreamKeyDTO, +stream_id, user);
@@ -78,7 +76,7 @@ export class StreamController extends BaseController {
         @Request() req: { user: User },
         @Param('stream_id') stream_id: string,
         @Param('stream_key_id') stream_key_id: string,
-        @Body(new ZodValidationPipe(UpdateStreamKeySchema)) updateStreamKeyDTO: UpdateStreamKeyDTO
+        @Body() updateStreamKeyDTO: UpdateStreamKeyDTO
     ) {
         const { user } = req;
         const streamKey = await this.streamService.updateStreamKeyById(
