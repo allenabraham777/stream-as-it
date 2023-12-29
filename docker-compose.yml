@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+    auth-server:
+        build:
+            context: .
+            dockerfile: ./apps/auth-server/Dockerfile
+            args:
+                APP: '@stream-as-it/auth-server'
+                OUT: 'auth-server'
+        ports:
+            - '8001:8001'
+        volumes:
+            - ./apps/auth-server:/app/apps/auth-server
+            - /app/apps/auth-server/node_modules
+        command: yarn workspace @stream-as-it/auth-server run dev
+
+networks:
+    default:
