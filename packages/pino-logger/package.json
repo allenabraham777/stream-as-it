@@ -1,0 +1,19 @@
+{
+  "name": "@stream-as-it/pino-logger",
+  "version": "0.0.1",
+  "description": "Logger for nest app",
+  "main": "build/index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "clean": "rimraf build"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.3.0",
+    "nestjs-pino": "^3.5.0"
+  },
+  "devDependencies": {
+    "@stream-as-it/tsconfig": "*"
+  }
+}
