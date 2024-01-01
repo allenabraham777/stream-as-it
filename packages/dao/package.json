@@ -1,0 +1,23 @@
+{
+  "name": "@stream-as-it/dao",
+  "version": "0.0.1",
+  "description": "Data access layer package for stream as it",
+  "main": "build/index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "clean": "rimraf build"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.3.0",
+    "@nestjs/config": "^3.1.1",
+    "@nestjs/typeorm": "^10.0.1",
+    "pg": "^8.11.3",
+    "typeorm": "^0.3.17"
+  },
+  "devDependencies": {
+    "@stream-as-it/tsconfig": "*",
+    "typescript": "^5.3.3"
+  }
+}
