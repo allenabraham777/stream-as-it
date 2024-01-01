@@ -4,5 +4,5 @@
     "outDir": "./build",
     "baseUrl": "./src"
   },
-  "exclude": ["./build"]
+  "exclude": ["node_modules", "test", "build"]
 }
