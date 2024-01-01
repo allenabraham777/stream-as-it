@@ -44,4 +44,12 @@ export abstract class AbstractRepository<T extends AbstractEntity<T>> {
     async findOneAndDelete(where: FindOptionsWhere<T>) {
         await this.itemsRepository.delete(where);
     }
+
+    async transactionalOperation(
+        operation: (transactionalEntityManager: EntityManager) => Promise<T>
+    ): Promise<T> {
+        return this.itemsRepository.manager.transaction(async (transactionalEntityManager) => {
+            return await operation(transactionalEntityManager);
+        });
+    }
 }

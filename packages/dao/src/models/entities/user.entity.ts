@@ -7,6 +7,7 @@ import { AbstractEntity } from '../abstract.entity';
 @Entity()
 @Unique(['email', 'account_id'])
 export class User extends AbstractEntity<User> {
+    @Column()
     @RelationId((account: Account) => account.id)
     account_id: number;
 

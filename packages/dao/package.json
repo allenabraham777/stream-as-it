@@ -10,9 +10,9 @@
     "clean": "rimraf build"
   },
   "dependencies": {
-    "@nestjs/common": "^10.3.0",
+    "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.1.1",
-    "@nestjs/typeorm": "^10.0.1",
+    "@nestjs/typeorm": "^10.0.0",
     "pg": "^8.11.3",
     "typeorm": "^0.3.17"
   },
