@@ -1,17 +1,16 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
-
-import { PrismaService, PRISMA_INJECTION_TOKEN } from '@stream-as-it/db';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class RefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
-    constructor(@Inject(PRISMA_INJECTION_TOKEN) private prismaService: PrismaService) {
+    constructor(private readonly configService: ConfigService) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             passReqToCallback: true,
-            secretOrKey: process.env.REFRESH_SECRET
+            secretOrKey: configService.getOrThrow('REFRESH_SECRET')
         });
     }
 
