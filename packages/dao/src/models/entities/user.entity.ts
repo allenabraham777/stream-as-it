@@ -1,16 +1,12 @@
-import { Entity, Column, ManyToOne, Unique, RelationId, OneToMany } from 'typeorm';
+import { Entity, Column, ManyToOne, Unique, JoinColumn, OneToMany } from 'typeorm';
 
 import { Account } from './account.entity';
 import { Stream } from './stream.entity';
 import { AbstractEntity } from '../abstract.entity';
 
 @Entity()
-@Unique(['email', 'account_id'])
+@Unique(['email', 'account'])
 export class User extends AbstractEntity<User> {
-    @Column()
-    @RelationId((account: Account) => account.id)
-    account_id: number;
-
     @Column()
     name: string;
 
@@ -23,15 +19,19 @@ export class User extends AbstractEntity<User> {
     @Column({ default: false })
     email_verified: boolean;
 
-    @Column()
+    @Column({ nullable: true })
     verification_token?: string;
 
-    @Column()
+    @Column({ nullable: true })
     reset_token?: string;
 
-    @OneToMany(() => Stream, (stream) => stream.account)
+    @Column()
+    account_id: number;
+
+    @OneToMany(() => Stream, (stream) => stream.user)
     streams: Stream[];
 
-    @ManyToOne(() => Account)
+    @ManyToOne(() => Account, (account) => account.users)
+    @JoinColumn({ name: 'account_id' })
     account: Account;
 }

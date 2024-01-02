@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToOne, OneToMany, RelationId } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { User } from './user.entity';
 import { Account } from './account.entity';
 import { AbstractEntity } from '../abstract.entity';
@@ -6,12 +6,6 @@ import { StreamKey } from './streamKey.entity';
 
 @Entity()
 export class Stream extends AbstractEntity<Stream> {
-    @RelationId((user: User) => user.id)
-    user_id: number;
-
-    @RelationId((account: Account) => account.id)
-    account_id: number;
-
     @Column()
     stream_title: string;
 
@@ -21,13 +15,20 @@ export class Stream extends AbstractEntity<Stream> {
     @Column({ default: false })
     is_live: boolean;
 
+    @Column()
+    user_id: number;
+
+    @Column()
+    account_id: number;
+
     @OneToMany(() => StreamKey, (streamKey) => streamKey.stream)
-    @JoinTable()
     stream_keys: StreamKey[];
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, (user) => user.streams)
+    @JoinColumn({ name: 'user_id' })
     user: User;
 
-    @ManyToOne(() => Account)
+    @ManyToOne(() => Account, (account) => account.streams)
+    @JoinColumn({ name: 'account_id' })
     account: Account;
 }

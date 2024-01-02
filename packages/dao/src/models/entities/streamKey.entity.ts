@@ -1,32 +1,34 @@
-import { Column, Entity, ManyToOne, RelationId, Unique } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, Unique } from 'typeorm';
 import { Account } from './account.entity';
 import { AbstractEntity } from '../abstract.entity';
 import { Stream } from './stream.entity';
 
 @Entity()
-@Unique(['stream_id', 'platform'])
+@Unique(['stream', 'platform'])
 export class StreamKey extends AbstractEntity<StreamKey> {
-    @RelationId((stream: Stream) => stream.id)
-    stream_id: number;
-
     @Column()
     platform: string;
 
     @Column()
     stream_key: string;
 
-    @Column()
+    @Column({ nullable: true })
     stream_url?: string;
 
-    @Column()
+    @Column({ nullable: true })
     video_id?: string;
 
-    @RelationId((account: Account) => account.id)
+    @Column()
+    stream_id: number;
+
+    @Column()
     account_id: number;
 
-    @ManyToOne(() => Stream)
-    stream: Stream[];
+    @ManyToOne(() => Stream, (stream) => stream.stream_keys)
+    @JoinColumn({ name: 'stream_id' })
+    stream: Stream;
 
-    @ManyToOne(() => Account)
+    @ManyToOne(() => Account, (account) => account.stream_keys)
+    @JoinColumn({ name: 'account_id' })
     account: Account;
 }

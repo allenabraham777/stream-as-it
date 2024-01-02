@@ -7,16 +7,23 @@ export abstract class AbstractRepository<T extends AbstractEntity<T>> {
     protected abstract readonly logger: Logger;
 
     constructor(
-        private readonly itemsRepository: Repository<T>,
+        private readonly repository: Repository<T>,
         private readonly entityManager: EntityManager
     ) {}
 
-    async create(entity: T): Promise<T> {
-        return this.entityManager.save(entity);
+    async create(entity: T, entityManager?: EntityManager): Promise<T> {
+        const manager = entityManager || this.entityManager;
+        return manager.save(entity);
     }
 
-    async findOne(where: FindOptionsWhere<T>, relations?: FindOptionsRelations<T>): Promise<T> {
-        const entity = await this.itemsRepository.findOne({ where, relations });
+    async findOne(
+        where: FindOptionsWhere<T>,
+        relations: FindOptionsRelations<T> = {},
+        entityManager?: EntityManager
+    ): Promise<T> {
+        const manager = entityManager || this.entityManager;
+
+        const entity = await manager.withRepository(this.repository).findOne({ where, relations });
 
         if (!entity) {
             this.logger.warn('Document not found with where', where);
@@ -26,8 +33,26 @@ export abstract class AbstractRepository<T extends AbstractEntity<T>> {
         return entity;
     }
 
-    async findOneAndUpdate(where: FindOptionsWhere<T>, partialEntity: QueryDeepPartialEntity<T>) {
-        const updateResult = await this.itemsRepository.update(where, partialEntity);
+    async findOneWithoutError(
+        where: FindOptionsWhere<T>,
+        relations: FindOptionsRelations<T> = {},
+        entityManager?: EntityManager
+    ): Promise<T> {
+        const manager = entityManager || this.entityManager;
+
+        return await manager.withRepository(this.repository).findOne({ where, relations });
+    }
+
+    async findOneAndUpdate(
+        where: FindOptionsWhere<T>,
+        partialEntity: QueryDeepPartialEntity<T>,
+        entityManager?: EntityManager
+    ) {
+        const manager = entityManager || this.entityManager;
+
+        const updateResult = await manager
+            .withRepository(this.repository)
+            .update(where, partialEntity);
 
         if (!updateResult.affected) {
             this.logger.warn('Entity not found with where', where);
@@ -37,18 +62,22 @@ export abstract class AbstractRepository<T extends AbstractEntity<T>> {
         return this.findOne(where);
     }
 
-    async find(where: FindOptionsWhere<T>) {
-        return this.itemsRepository.findBy(where);
+    async find(where: FindOptionsWhere<T>, entityManager?: EntityManager) {
+        const manager = entityManager || this.entityManager;
+
+        return manager.withRepository(this.repository).findBy(where);
     }
 
-    async findOneAndDelete(where: FindOptionsWhere<T>) {
-        await this.itemsRepository.delete(where);
+    async findOneAndDelete(where: FindOptionsWhere<T>, entityManager?: EntityManager) {
+        const manager = entityManager || this.entityManager;
+
+        await manager.withRepository(this.repository).delete(where);
     }
 
     async transactionalOperation(
         operation: (transactionalEntityManager: EntityManager) => Promise<T>
     ): Promise<T> {
-        return this.itemsRepository.manager.transaction(async (transactionalEntityManager) => {
+        return this.repository.manager.transaction(async (transactionalEntityManager) => {
             return await operation(transactionalEntityManager);
         });
     }
