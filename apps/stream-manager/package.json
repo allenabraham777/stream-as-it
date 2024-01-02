@@ -29,6 +29,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.1.17",
     "@stream-as-it/db": "*",
+    "@stream-as-it/health": "*",
     "@stream-as-it/passport": "*",
     "@stream-as-it/server-class": "*",
     "@stream-as-it/tsconfig": "*",
