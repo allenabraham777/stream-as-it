@@ -31,8 +31,11 @@ export class AuthController extends BaseController {
     }
 
     @Get('verify/:user_token/:verification_token')
-    async verifyUser(@Param() params: { user_token: string; verification_token: string }) {
-        const status = await this.authService.verifyUser(params.user_token, params.user_token);
+    async verifyUser(
+        @Param('user_token') user_token: string,
+        @Param('verification_token') verification_token: string
+    ) {
+        const status = await this.authService.verifyUser(user_token, verification_token);
         return this.serializeData(status, UserVerificationResponseSerializer);
     }
 
