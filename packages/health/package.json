@@ -1,0 +1,19 @@
+{
+  "name": "@stream-as-it/health",
+  "version": "0.0.1",
+  "description": "Health check route module for stream as it",
+  "main": "build/index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf build && rimraf coverage"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.3.0"
+  },
+  "devDependencies": {
+    "@stream-as-it/tsconfig": "*",
+    "typescript": "4.9.3"
+  }
+}

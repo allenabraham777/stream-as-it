@@ -1,0 +1,8 @@
+{
+  "extends": "@stream-as-it/tsconfig/nestjs.json",
+  "compilerOptions": {
+    "outDir": "./build",
+    "baseUrl": "./src"
+  },
+  "exclude": ["node_modules", "test", "build"]
+}
