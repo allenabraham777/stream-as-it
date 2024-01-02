@@ -8,8 +8,10 @@ services:
             args:
                 APP: '@stream-as-it/auth-server'
                 OUT: 'auth-server'
+        env_file:
+            - .env
         ports:
-            - '8001:8001'
+            - '8000:8000'
         volumes:
             - ./apps/auth-server:/app/apps/auth-server
             - /app/apps/auth-server/node_modules
