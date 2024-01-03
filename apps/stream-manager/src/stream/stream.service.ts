@@ -1,14 +1,19 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
-import { PrismaService, PRISMA_INJECTION_TOKEN } from '@stream-as-it/db';
+import { Stream, StreamKey } from '@stream-as-it/dao';
 import { User } from '@stream-as-it/types';
 
 import { AddStreamKeyDTO, CreateStreamDTO, UpdateStreamKeyDTO } from './stream.dto';
 import { StreamKeySerializer, StreamSerializer } from './stream.serializer';
+import { StreamRepository } from './repository/stream.repository';
+import { StreamKeyRepository } from './repository/streamKey.repository';
 
 @Injectable()
 export class StreamService {
-    constructor(@Inject(PRISMA_INJECTION_TOKEN) private prisma: PrismaService) {}
+    constructor(
+        private readonly streamRepository: StreamRepository,
+        private readonly streamKeyRepository: StreamKeyRepository
+    ) {}
 
     async createStream(
         createStreamDto: CreateStreamDTO,
@@ -16,17 +21,15 @@ export class StreamService {
         serializeData: boolean = false
     ) {
         const { stream_title, stream_description } = createStreamDto;
-        const stream = await this.prisma.$transaction(async (t) => {
-            const stream = await t.stream.create({
-                data: {
-                    stream_title,
-                    stream_description,
-                    is_live: false,
-                    account_id: user.account_id,
-                    user_id: user.id
-                }
+        const stream = await this.streamRepository.transactionalOperation(async (entityManager) => {
+            const newStream = new Stream({
+                stream_title,
+                stream_description,
+                is_live: false,
+                account_id: user.account_id,
+                user_id: user.id
             });
-            return stream;
+            return await this.streamRepository.create(newStream, entityManager);
         });
         if (serializeData) {
             return new StreamSerializer(stream);
@@ -35,10 +38,8 @@ export class StreamService {
     }
 
     async findAllStreams(user: User, serializeData: boolean = false) {
-        const { id, account_id } = user;
-        const streams = await this.prisma.stream.findMany({
-            where: { account_id, user_id: id }
-        });
+        const { account_id } = user;
+        const streams = await this.streamRepository.find({ account_id });
         if (serializeData) {
             return streams.map((stream) => new StreamSerializer(stream));
         }
@@ -46,13 +47,11 @@ export class StreamService {
     }
 
     async findStreamById(id: number, user: User, serializeData: boolean = false) {
-        const { id: user_id, account_id } = user;
-        const stream = await this.prisma.stream.findFirst({
-            where: { id, user_id, account_id },
-            include: {
-                stream_keys: { where: { deleted_at: null, stream_id: id, account_id } }
-            }
-        });
+        const { account_id } = user;
+        const stream = await this.streamRepository.findOne(
+            { id, account_id },
+            { stream_keys: true }
+        );
         if (!stream) {
             throw new HttpException('No such stream', HttpStatus.NOT_FOUND);
         }
@@ -65,18 +64,23 @@ export class StreamService {
     async removeStreamById(id: number, user: User) {
         const { id: user_id, account_id } = user;
         try {
-            await this.prisma.stream.deleteSoft({
-                where: {
-                    id,
-                    user_id,
-                    account_id
-                }
-            });
-            await this.prisma.streamKey.deleteManySoft({
-                where: {
-                    stream_id: id,
-                    account_id
-                }
+            await this.streamRepository.transactionalOperation(async (entityManager) => {
+                await this.streamKeyRepository.findOneAndDelete(
+                    {
+                        stream_id: id,
+                        account_id
+                    },
+                    entityManager
+                );
+                await this.streamRepository.findOneAndDelete(
+                    {
+                        id,
+                        user_id,
+                        account_id
+                    },
+                    entityManager
+                );
+                return null;
             });
         } catch (error) {
             if (error?.code === 'P2025') {
@@ -94,29 +98,27 @@ export class StreamService {
         serializeData: boolean = false
     ) {
         const { account_id } = user;
-        const streamKey = await this.prisma.$transaction(async (t) => {
-            const existingStreamKey = await t.streamKey.findFirst({
-                where: {
+        const streamKey = await this.streamKeyRepository.transactionalOperation(
+            async (entityManager) => {
+                const existingStreamKey = await this.streamKeyRepository.findOneWithoutError({
                     stream_id,
                     platform: addStreamKeyDTO.platform,
                     account_id
+                });
+                if (existingStreamKey) {
+                    throw new HttpException(
+                        'Stream key already exists for the give platform',
+                        HttpStatus.CONFLICT
+                    );
                 }
-            });
-            if (existingStreamKey) {
-                throw new HttpException(
-                    'Stream key already exists for the give platform',
-                    HttpStatus.CONFLICT
-                );
-            }
-            const streamKey = await t.streamKey.create({
-                data: {
+                const newStreamKey = new StreamKey({
                     ...addStreamKeyDTO,
                     account_id,
                     stream_id
-                }
-            });
-            return streamKey;
-        });
+                });
+                return await this.streamKeyRepository.create(newStreamKey, entityManager);
+            }
+        );
         if (serializeData) {
             return new StreamKeySerializer(streamKey);
         }
@@ -131,29 +133,19 @@ export class StreamService {
         serializeData: boolean = false
     ) {
         const { account_id } = user;
-        const streamKey = await this.prisma.$transaction(async (t) => {
-            const streamKey = await t.streamKey.findFirst({
-                where: {
-                    id,
-                    stream_id,
-                    account_id
-                }
-            });
-            if (!streamKey) {
-                throw new HttpException('No such stream key', HttpStatus.NOT_FOUND);
+        const streamKey = await this.streamKeyRepository.transactionalOperation(
+            async (entityManager) => {
+                return this.streamKeyRepository.findOneAndUpdate(
+                    {
+                        id,
+                        stream_id,
+                        account_id
+                    },
+                    updateStreamKeyDTO,
+                    entityManager
+                );
             }
-            const updatedStreamKey = await t.streamKey.update({
-                where: {
-                    id,
-                    stream_id,
-                    account_id
-                },
-                data: {
-                    ...updateStreamKeyDTO
-                }
-            });
-            return updatedStreamKey;
-        });
+        );
         if (serializeData) {
             return new StreamKeySerializer(streamKey);
         }
@@ -162,25 +154,12 @@ export class StreamService {
 
     async deleteStreamKeyById(id: number, stream_id: number, user: User) {
         const { account_id } = user;
-        await this.prisma.$transaction(async (t) => {
-            const streamKey = await t.streamKey.findFirst({
-                where: {
-                    id,
-                    stream_id,
-                    account_id
-                }
-            });
-            if (!streamKey) {
-                throw new HttpException('No such stream key', HttpStatus.NOT_FOUND);
-            }
-            await t.streamKey.deleteSoft({
-                where: {
-                    id,
-                    stream_id,
-                    account_id
-                }
-            });
+        this.streamKeyRepository.findOneAndDelete({
+            id,
+            stream_id,
+            account_id
         });
+
         return { success: true };
     }
 }

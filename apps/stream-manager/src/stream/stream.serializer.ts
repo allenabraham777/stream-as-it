@@ -38,13 +38,13 @@ export class StreamKeySerializer {
     readonly platform: string;
 
     @Expose()
-    readonly stream_url: string;
+    readonly stream_url?: string;
 
     @Expose()
     readonly stream_key: string;
 
     @Expose()
-    readonly video_id: string | null;
+    readonly video_id?: string | null;
 
     constructor(partial: Partial<StreamKeySerializer>) {
         Object.assign(this, partial);
