@@ -1,7 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { AbstractRepository, User } from '@stream-as-it/dao';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
+
+import { AbstractRepository, User } from '@stream-as-it/dao';
 
 @Injectable()
 export class UsersRepository extends AbstractRepository<User> {
