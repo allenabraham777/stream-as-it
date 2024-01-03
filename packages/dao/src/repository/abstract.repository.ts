@@ -71,7 +71,7 @@ export abstract class AbstractRepository<T extends AbstractEntity<T>> {
     async findOneAndDelete(where: FindOptionsWhere<T>, entityManager?: EntityManager) {
         const manager = entityManager || this.entityManager;
 
-        await manager.withRepository(this.repository).delete(where);
+        await manager.withRepository(this.repository).softDelete(where);
     }
 
     async transactionalOperation(

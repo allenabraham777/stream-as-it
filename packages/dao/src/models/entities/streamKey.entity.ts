@@ -24,11 +24,17 @@ export class StreamKey extends AbstractEntity<StreamKey> {
     @Column()
     account_id: number;
 
-    @ManyToOne(() => Stream, (stream) => stream.stream_keys)
+    @ManyToOne(() => Stream, (stream) => stream.stream_keys, {
+        cascade: true,
+        onDelete: 'CASCADE'
+    })
     @JoinColumn({ name: 'stream_id' })
     stream: Stream;
 
-    @ManyToOne(() => Account, (account) => account.stream_keys)
+    @ManyToOne(() => Account, (account) => account.stream_keys, {
+        cascade: true,
+        onDelete: 'CASCADE'
+    })
     @JoinColumn({ name: 'account_id' })
     account: Account;
 }

@@ -31,7 +31,10 @@ export class User extends AbstractEntity<User> {
     @OneToMany(() => Stream, (stream) => stream.user)
     streams: Stream[];
 
-    @ManyToOne(() => Account, (account) => account.users)
+    @ManyToOne(() => Account, (account) => account.users, {
+        cascade: true,
+        onDelete: 'CASCADE'
+    })
     @JoinColumn({ name: 'account_id' })
     account: Account;
 }
