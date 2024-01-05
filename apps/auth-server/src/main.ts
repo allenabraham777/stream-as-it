@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
 
 import { AppModule } from './app.module';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -16,10 +17,16 @@ async function bootstrap() {
         .setVersion('0.0.1')
         .addBearerAuth()
         .build();
+
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('docs', app, document);
+
     app.enableCors();
     app.useLogger(app.get(Logger));
-    await app.listen(8000);
+
+    const configService = app.get(ConfigService);
+    const PORT = configService.get('PORT');
+
+    await app.listen(PORT || 8001);
 }
 bootstrap();
