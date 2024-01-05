@@ -1,0 +1,7 @@
+{
+  "extends": "@stream-as-it/tsconfig/nestjs.json",
+  "compilerOptions": {
+    "outDir": "./build",
+    "baseUrl": "./src"
+  }
+}
