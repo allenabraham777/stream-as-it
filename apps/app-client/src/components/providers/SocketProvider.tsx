@@ -6,12 +6,14 @@ import _ from 'underscore';
 
 import { SocketContext } from '@/context/socketContext';
 
+const BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/broadcast`;
+
 type Props = {
     children: React.ReactNode;
 };
 
 function loadSocket(token: string, setSocket: (value: Socket) => void) {
-    const socket = io('http://localhost:8003', { query: { token } });
+    const socket = io(BASE_URL, { query: { token } });
     setSocket(socket);
 }
 

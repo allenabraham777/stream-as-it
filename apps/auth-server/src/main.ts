@@ -8,12 +8,14 @@ import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+    const configService = app.get(ConfigService);
 
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
     const config = new DocumentBuilder()
         .setTitle('Auth Server')
         .setDescription('Base server API description')
+        .addServer(configService.get('PROXY') ? 'http://localhost:8005/api/authentication' : '')
         .setVersion('0.0.1')
         .addBearerAuth()
         .build();
@@ -24,7 +26,6 @@ async function bootstrap() {
     app.enableCors();
     app.useLogger(app.get(Logger));
 
-    const configService = app.get(ConfigService);
     const PORT = configService.get('PORT');
 
     await app.listen(PORT || 8001);

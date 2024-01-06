@@ -3,7 +3,7 @@ import { Session, NextAuthOptions } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
-const BASE_URL = 'http://localhost:8000';
+const BASE_URL = 'http://localhost:8005/api/authentication';
 
 async function refreshToken(token: JWT): Promise<JWT> {
     const { data } = await axios.get(BASE_URL + '/auth/refresh', {
@@ -27,13 +27,18 @@ export const authOptions: NextAuthOptions = {
                 password: { label: 'Password', type: 'password', placeholder: 'password' }
             },
             async authorize(credentials, req) {
-                const { data, status } = await axios.post(`${BASE_URL}/auth/login`, {
-                    email: credentials?.email,
-                    password: credentials?.password
-                });
+                try {
+                    const { data, status } = await axios.post(`${BASE_URL}/auth/login`, {
+                        email: credentials?.email,
+                        password: credentials?.password
+                    });
+                    console.log({ data, status });
 
-                if (status === 201 && data) {
-                    return data;
+                    if (status === 201 && data) {
+                        return data;
+                    }
+                } catch (error) {
+                    console.error(error);
                 }
                 return null;
             }

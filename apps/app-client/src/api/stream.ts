@@ -2,7 +2,7 @@ import { Stream, StreamKey } from '@stream-as-it/types';
 
 import httpClient from '@/services/http.service';
 
-const BASE_URL = 'http://localhost:8001';
+const BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stream`;
 
 export const fetchAllStreams = () => httpClient.get<Stream[]>(`${BASE_URL}/stream`);
 
