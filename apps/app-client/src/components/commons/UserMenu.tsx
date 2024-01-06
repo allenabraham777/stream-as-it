@@ -2,7 +2,6 @@
 import React from 'react';
 import { LayoutDashboard, LogOut, Menu } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
-import Link from 'next/link';
 
 import {
     Button,
@@ -35,12 +34,12 @@ const UserMenu = (props: Props) => {
                 <DropdownMenuLabel className="text-base">{user.email}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup className="py-2">
-                    <Link href="/stream/dashboard">
+                    <a href="/stream/dashboard">
                         <DropdownMenuItem className="py-2 cursor-pointer">
                             <LayoutDashboard className="mr-4 h-6 w-6" />
                             <span className="text-base">Dashboard</span>
                         </DropdownMenuItem>
-                    </Link>
+                    </a>
                     <DropdownMenuItem className="py-2 cursor-pointer" onClick={() => signOut()}>
                         <LogOut className="mr-4 h-6 w-6" />
                         <span className="text-base">Logout</span>

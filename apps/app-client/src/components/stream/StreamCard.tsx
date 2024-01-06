@@ -11,7 +11,7 @@ type Props = {
 const StreamCard = ({ stream }: Props) => {
     return (
         <Link href={`/stream/${stream.id}`}>
-            <Card className="w-72 h-52 p-4 flex flex-col gap-4 overflow-hidden justify-center items-center cursor-pointer active:bg-secondary">
+            <Card className="h-52 p-4 flex flex-col gap-4 overflow-hidden justify-center items-center cursor-pointer active:bg-secondary">
                 <Typography variant="h4">{stream.stream_title}</Typography>
             </Card>
         </Link>
