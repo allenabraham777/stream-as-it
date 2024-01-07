@@ -16,7 +16,6 @@ export class AuthServerReverseProxyMiddleware implements NestMiddleware {
             secure: false,
             changeOrigin: true,
             onProxyReq: (proxyReq, req, _res) => {
-                this.logger.log(proxyReq);
                 this.logger.log(`Proxying: ${req.method} originally made to ${req.originalUrl}...`);
             }
         });

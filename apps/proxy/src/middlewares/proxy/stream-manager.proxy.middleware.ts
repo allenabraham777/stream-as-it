@@ -13,9 +13,9 @@ export class StreamManagerReverseProxyMiddleware implements NestMiddleware {
             pathRewrite: {
                 '/api/stream': '/'
             },
+            changeOrigin: true,
             secure: false,
             onProxyReq: (proxyReq, req, _res) => {
-                this.logger.log(proxyReq);
                 this.logger.log(`Proxying: ${req.method} originally made to ${req.originalUrl}...`);
             }
         });

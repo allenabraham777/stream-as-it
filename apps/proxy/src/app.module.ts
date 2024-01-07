@@ -5,7 +5,7 @@ import { HealthModule } from '@stream-as-it/health';
 import { AuthServerReverseProxyMiddleware } from 'middlewares/proxy/auth-server.proxy.middleware';
 import { StreamManagerReverseProxyMiddleware } from 'middlewares/proxy/stream-manager.proxy.middleware';
 import { StreamServerReverseProxyMiddleware } from 'middlewares/proxy/stream-server.proxy.middleware';
-// import { AppClientReverseProxyMiddleware } from 'middlewares/proxy/app-client.proxy.middleware';
+import { AppClientReverseProxyMiddleware } from 'middlewares/proxy/app-client.proxy.middleware';
 import { RouterModule } from '@nestjs/core';
 
 @Module({
@@ -27,9 +27,9 @@ export class AppModule implements NestModule {
         consumer
             .apply(StreamServerReverseProxyMiddleware)
             .forRoutes({ path: '/api/broadcast/*', method: RequestMethod.ALL });
-        // consumer
-        //     .apply(AppClientReverseProxyMiddleware)
-        //     .exclude('/health')
-        //     .forRoutes({ path: '/*', method: RequestMethod.ALL });
+        consumer
+            .apply(AppClientReverseProxyMiddleware)
+            .exclude('/health')
+            .forRoutes({ path: '/*', method: RequestMethod.ALL });
     }
 }
