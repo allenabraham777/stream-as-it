@@ -76,9 +76,12 @@ export const authOptions: NextAuthOptions = {
             session.error = error;
 
             return session;
+        },
+        redirect(params) {
+            return params.url;
         }
     },
     pages: {
-        signIn: '/login'
+        signIn: `${process.env.NEXT_PUBLIC_BACKEND_URL}/login`
     }
 };

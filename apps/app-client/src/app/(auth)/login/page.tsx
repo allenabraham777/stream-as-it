@@ -27,7 +27,7 @@ const Login = (props: Props) => {
             email: dataRef.current.email,
             password: dataRef.current.password,
             redirect: true,
-            callbackUrl: '/stream/dashboard'
+            callbackUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/stream/dashboard`
         });
     };
 
