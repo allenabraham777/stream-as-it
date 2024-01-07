@@ -10,9 +10,7 @@ export class StreamServerReverseProxyMiddleware implements NestMiddleware {
     use(req: any, res: any, next: (error?: any) => void) {
         const proxy = createProxyMiddleware({
             target: this.configService.getOrThrow('STREAM_SERVER_URL'),
-            pathRewrite: {
-                '/api/broadcast': '/'
-            },
+            ws: true,
             changeOrigin: true,
             secure: false,
             onProxyReq: (proxyReq, req, _res) => {

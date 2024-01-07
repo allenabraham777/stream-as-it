@@ -26,7 +26,7 @@ export class AppModule implements NestModule {
             .forRoutes({ path: '/api/stream/*', method: RequestMethod.ALL });
         consumer
             .apply(StreamServerReverseProxyMiddleware)
-            .forRoutes({ path: '/api/broadcast/*', method: RequestMethod.ALL });
+            .forRoutes({ path: '/socket*', method: RequestMethod.ALL });
         consumer
             .apply(AppClientReverseProxyMiddleware)
             .exclude('/health')
