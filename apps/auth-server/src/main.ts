@@ -15,7 +15,7 @@ async function bootstrap() {
     const config = new DocumentBuilder()
         .setTitle('Auth Server')
         .setDescription('Base server API description')
-        .addServer(configService.get('PROXY') ? 'http://localhost:8005/api/authentication' : '')
+        .addServer(configService.get('PROXY') || '')
         .setVersion('0.0.1')
         .addBearerAuth()
         .build();

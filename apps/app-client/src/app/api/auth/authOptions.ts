@@ -3,7 +3,7 @@ import { Session, NextAuthOptions } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
-const BASE_URL = 'http://localhost:8005/api/authentication';
+const BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/authentication`;
 
 async function refreshToken(token: JWT): Promise<JWT> {
     const { data } = await axios.get(BASE_URL + '/auth/refresh', {
