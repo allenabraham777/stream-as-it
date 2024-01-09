@@ -6,7 +6,7 @@ import _ from 'underscore';
 
 import { SocketContext } from '@/context/socketContext';
 
-const BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/broadcast`;
+const BASE_URL = `${process.env.NEXT_PUBLIC_STREAM_BACKEND_URL}`;
 
 type Props = {
     children: React.ReactNode;
