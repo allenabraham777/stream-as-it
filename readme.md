@@ -110,10 +110,10 @@ This project draws inspiration from StreamYard, a leading streaming platform. It
 -   [x] Bring authentication layer to frontend
 -   [x] Implement stream manager server
 -   [x] Implement streaming server
--   [ ] Add reverse proxy
+-   [x] Add reverse proxy
 -   [ ] Combine swagger docs
 -   [x] Integrate apis with UI
--   [ ] Dockerize application (In progress)
--   [ ] Migrate from prisma to typeorm
+-   [x] Dockerize application
+-   [x] Migrate from prisma to typeorm
 -   [ ] Add banner support
 -   [ ] Add live chat support (Display only)
