@@ -31,6 +31,15 @@ const Login = (props: Props) => {
         });
     };
 
+    const loginAsGuest = () => {
+        signIn('credentials', {
+            email: 'guest@example.com',
+            password: 'Test@1234',
+            redirect: true,
+            callbackUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/stream/dashboard`
+        });
+    };
+
     return (
         <Card>
             <CardHeader className="space-y-1">
@@ -61,10 +70,18 @@ const Login = (props: Props) => {
                     />
                 </div>
             </CardContent>
-            <CardFooter className="flex flex-col gap-2">
-                <Button className="w-full" onClick={submit}>
-                    Login
-                </Button>
+            <CardFooter className="flex flex-col gap-6">
+                <div className="flex flex-col gap-4 w-full">
+                    <Button className="w-full" onClick={submit}>
+                        Login
+                    </Button>
+                    <Button
+                        className="w-full bg-transparent hover:bg-transparent border border-primary text-primary"
+                        onClick={loginAsGuest}
+                    >
+                        Login as guest
+                    </Button>
+                </div>
                 <div className="w-full">
                     Do not have an account?{' '}
                     <Link href="/signup">
