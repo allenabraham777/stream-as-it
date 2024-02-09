@@ -116,4 +116,4 @@ This project draws inspiration from StreamYard, a leading streaming platform. It
 -   [x] Dockerize application
 -   [x] Migrate from prisma to typeorm
 -   [ ] Add banner support
--   [ ] Add live chat support (Display only)
+-   [x] Add live chat support using native youtube chat embed

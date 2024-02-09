@@ -7,6 +7,7 @@ import Brand from './configurations/Brand';
 import Settings from './configurations/Settings';
 import Broadcast from './configurations/Broadcast';
 import NotImplemented from '@/components/commons/NotImplemented';
+import Chat from './configurations/Chat';
 
 type Props = {};
 
@@ -15,7 +16,7 @@ const Configuration = (props: Props) => {
     let tabArray: React.ReactNode[] = [];
     switch (tab) {
         case TABS.CHAT.name:
-            tabArray = [<NotImplemented title="Chats" key="chat" />];
+            tabArray = [<Chat />];
             break;
         case TABS.BANNER.name:
             tabArray = [<NotImplemented title="Banners" key="banner" />];
